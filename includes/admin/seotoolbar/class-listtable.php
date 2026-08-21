@@ -26,7 +26,7 @@ declare( strict_types=1 );
 
 namespace Better_SEO\Admin\SEOToolbar;
 
-\defined( 'BETTER_SEO_PRESENT' ) or die;
+\defined( 'BETTER_SEO_PRESENT' ) or exit;
 
 use Better_SEO\Admin;
 use Override;
@@ -92,7 +92,7 @@ final class ListTable extends Admin\Lists\Table {
 		 *
 		 * @param array<int, string> $order_keys Column keys to search for, in order of preference.
 		 */
-		$order_keys = (array) \apply_filters( 'better_seo_seo_column_keys_order', $order_keys );
+		$order_keys = (array) \apply_filters( 'better_seo_toolbar_column_keys_order', $order_keys );
 
 		$offset = false;
 

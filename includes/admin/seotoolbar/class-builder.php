@@ -26,7 +26,7 @@ declare( strict_types=1 );
 
 namespace Better_SEO\Admin\SEOToolbar;
 
-\defined( 'BETTER_SEO_PRESENT' ) or die;
+\defined( 'BETTER_SEO_PRESENT' ) or exit;
 
 use Better_SEO\Data;
 
@@ -158,6 +158,17 @@ class Builder {
 				\esc_html( $item['title'] ),
 				\implode( '<div>', array_map( '\\esc_html', $assessments ) ) . \str_repeat( '</div>', $count ),
 			);
+
+			if ( $use_symbols ) {
+				$aria = \sprintf(
+					'%s — %s: %s',
+					\esc_attr( $title ),
+					\esc_attr( $symbol ),
+					\esc_attr(
+						$count < 2 ? $gettext['assessment'] : $gettext['assessments']
+					),
+			);
+			}
 
 			yield \sprintf(
 				'<span class="better-seo-toolbar-section-wrap better-seo-tooltip-wrap"><span class="better-seo-toolbar-item better-seo-tooltip-item better-seo-toolbar-%1$s" title="%2$s" aria-label="%2$s" data-desc="%3$s" tabindex="0">%4$s</span></span>',

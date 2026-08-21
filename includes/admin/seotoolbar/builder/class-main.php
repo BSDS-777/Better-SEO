@@ -26,7 +26,7 @@ declare( strict_types=1 );
 
 namespace Better_SEO\Admin\SEOToolbar\Builder;
 
-\defined( 'BETTER_SEO_PRESENT' ) or die;
+\defined( 'BETTER_SEO_PRESENT' ) or exit;
 
 /**
  * Class Better_SEO\Admin\SEOToolbar\Builder\Main
@@ -69,7 +69,7 @@ abstract class Main {
 	 * @since 1.0.0
 	 * @var   array<string, mixed>
 	 */
-	protected array $query_cache = [];
+	private array $query_cache = [];
 
 	/**
 	 * Static pool of builder instances, keyed by class name.
