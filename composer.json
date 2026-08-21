@@ -1,0 +1,48 @@
+{
+    "name": "briansmith/better-seo",
+    "description": "A modern, lightweight WordPress SEO plugin built for WordPress 7.0+, PHP 8.3, and Divi 5.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Brian Smith",
+            "homepage": "https://briansmith.design"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0",
+        "squizlabs/php_codesniffer": "^3.9",
+        "wp-coding-standards/wpcs": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Better_SEO\\": "includes/"
+        },
+        "files": [
+            "inc/functions/api.php",
+            "inc/functions/deprecated.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Better_SEO\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "phpcs": "phpcs --standard=WordPress includes/ inc/",
+        "phpcbf": "phpcbf --standard=WordPress includes/ inc/",
+        "test": "phpunit --configuration phpunit.xml"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
