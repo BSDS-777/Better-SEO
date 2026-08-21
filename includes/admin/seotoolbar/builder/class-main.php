@@ -1,9 +1,9 @@
 <?php
 /**
- * Better SEO - Admin SEO Bar Builder Main
+ * Better SEO - Admin SEO Toolbar Builder Main
  *
  * @package    Better_SEO
- * @subpackage Better_SEO\Admin\SEOBar\Builder
+ * @subpackage Better_SEO\Admin\SEOToolbar\Builder
  * @author     Brian Smith
  * @copyright  2026 Brian Smith
  * @license    GPL-2.0-or-later
@@ -24,16 +24,16 @@
 
 declare( strict_types=1 );
 
-namespace Better_SEO\Admin\SEOBar\Builder;
+namespace Better_SEO\Admin\SEOToolbar\Builder;
 
 \defined( 'BETTER_SEO_PRESENT' ) or die;
 
 /**
- * Class Better_SEO\Admin\SEOBar\Builder\Main
+ * Class Better_SEO\Admin\SEOToolbar\Builder\Main
  *
- * Abstract base class for Better SEO Bar builders.
+ * Abstract base class for Better SEO Toolbar builders.
  * Provides shared test registration, caching, and query management
- * for post/page and term SEO Bar builder implementations.
+ * for post/page and term SEO Toolbar builder implementations.
  *
  * @since 1.0.0
  */
@@ -72,37 +72,79 @@ abstract class Main {
 	protected array $query_cache = [];
 
 	/**
-	 * The singleton instance of the builder subclass.
+	 * Static pool of builder instances, keyed by class name.
 	 *
 	 * @since 1.0.0
-	 * @var   static|null
+	 * @var   array<class-string, self>
 	 */
-	protected static ?self $instance = null;
+	private static array $instances = [];
 
 	/**
-	 * Constructor. Primes the shared cache on instantiation.
+	 * Returns a singleton instance of the builder.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return static The builder instance.
 	 */
-	final protected function __construct() {
+	public static function get_instance(): static {
+		return static::$instances[ static::class ] ??= new static();
+	}
+
+	/**
+	 * Runs all registered tests and returns results as a generator.
+	 *
+	 * Primes the shared cache, then the per-instance query cache,
+	 * then yields the result of each test method.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, mixed> $query The query arguments to test.
+	 * @return \Generator<string, array<string, mixed>> Generator yielding test results.
+	 */
+	public function run_all_tests( array $query ): \Generator {
+
+		static::$query = &$query;
+
 		$this->prime_cache();
+		$this->prime_query_cache();
+
+		foreach ( static::$tests as $test ) {
+			yield $test => $this->{ "test_{$test}" }();
+		}
 	}
 
 	/**
-	 * Returns the singleton instance of the builder subclass.
-	 *
-	 * Uses late static binding to allow subclass-specific instantiation.
+	 * Primes the shared static cache with global data.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return static The singleton builder instance.
+	 * @return void
 	 */
-	final public static function get_instance(): static {
-		return static::$instance ??= new static();
+	protected function prime_cache(): void {}
+
+	/**
+	 * Primes the per-instance query cache for the current subject.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	protected function prime_query_cache(): void {}
+
+	/**
+	 * Gets a cached value from the shared static cache.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $key The cache key.
+	 * @return mixed The cached value, or null if not found.
+	 */
+	protected static function get_cache( string $key ): mixed {
+		return static::$cache[ $key ] ?? null;
 	}
 
 	/**
-	 * Stores a value in the shared static cache.
+	 * Sets a cached value in the shared static cache.
 	 *
 	 * @since 1.0.0
 	 *
@@ -110,121 +152,18 @@ abstract class Main {
 	 * @param mixed  $value The value to cache.
 	 * @return mixed The cached value.
 	 */
-	final protected static function set_cache( string $key, mixed $value ): mixed {
-		return self::$cache[ $key ] = $value;
-	}
-
-	/**
-	 * Retrieves a value from the shared static cache.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $key The cache key.
-	 * @return mixed The cached value, or null if not set.
-	 */
-	final protected static function get_cache( string $key ): mixed {
-		return self::$cache[ $key ] ?? null;
-	}
-
-	/**
-	 * Runs all registered tests for the given query and yields results.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array<string, mixed> $query The current query arguments.
-	 * @return \Generator Yields test key => test result pairs.
-	 */
-	public function run_all_tests( array $query ): \Generator {
-		yield from $this->run_test( static::$tests, $query );
-	}
-
-	/**
-	 * Runs a specific subset of tests for the given query and yields results.
-	 *
-	 * If a blocking redirect is detected, only the redirect test is run.
-	 * Uses late static binding for $tests and $query to allow subclass overrides.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array<int, string>   $tests The test names to run.
-	 * @param array<string, mixed> $query The current query arguments.
-	 * @return \Generator Yields test key => test result pairs.
-	 */
-	final public function run_test( array $tests, array $query ): \Generator {
-
-		// Intersect with registered tests to prevent running unregistered tests.
-		$tests = array_intersect( static::$tests, $tests );
-
-		// Use late static binding to allow subclass query overrides.
-		static::$query = $query;
-
-		$this->prime_query_cache();
-
-		if ( \in_array( 'redirect', $tests, true ) && $this->has_blocking_redirect() ) {
-			$tests = [ 'redirect' ];
-		}
-
-		foreach ( $tests as $test ) {
-			// Dynamic dispatch: calls test_redirect(), test_title(), etc.
-			yield $test => $this->{"test_{$test}"}();
-		}
+	protected static function set_cache( string $key, mixed $value ): mixed {
+		return static::$cache[ $key ] = $value;
 	}
 
 	/**
 	 * Clears the per-instance query cache.
 	 *
-	 * Should be called after bar generation to prevent memory leaks.
-	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
-	final public function clear_query_cache(): void {
+	public function clear_query_cache(): void {
 		$this->query_cache = [];
 	}
-
-	/**
-	 * Returns the current per-instance query cache.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array<string, mixed> The current query cache.
-	 */
-	final public function get_query_cache(): array {
-		return $this->query_cache;
-	}
-
-	/**
-	 * Primes the shared static cache for this builder.
-	 *
-	 * Called once on instantiation. Subclasses should populate
-	 * any data that is shared across multiple bar generations.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	abstract protected function prime_cache(): void;
-
-	/**
-	 * Primes the per-instance query cache for the current bar generation.
-	 *
-	 * Called at the start of each run_test() invocation.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	abstract protected function prime_query_cache(): void;
-
-	/**
-	 * Determines whether a blocking redirect exists for the current query.
-	 *
-	 * If true, only the redirect test will be run for this bar.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool True if a blocking redirect is detected, false otherwise.
-	 */
-	abstract protected function has_blocking_redirect(): bool;
 }
