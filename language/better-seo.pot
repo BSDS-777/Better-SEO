@@ -1,0 +1,31 @@
+# Copyright (C) 2026 Brian Smith
+# This file is distributed under the GNU General Public License v2 or later.
+# https://www.gnu.org/licenses/gpl-2.0.html
+#
+# This is the POT (Portable Object Template) file for the Better SEO plugin.
+# It is used as the base template for all translations.
+#
+# To create a translation:
+#   1. Copy this file to better-seo-{locale}.po (e.g. better-seo-fr_FR.po)
+#   2. Fill in the msgstr entries with translated strings
+#   3. Compile to .mo format: msgfmt better-seo-fr_FR.po -o better-seo-fr_FR.mo
+#   4. Place both .po and .mo files in the languages/ directory
+#
+# To regenerate this file from source:
+#   wp i18n make-pot . languages/better-seo.pot --domain=better-seo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Better SEO 1.0.0\n"
+"Report-Msgid-Bugs-To: https://briansmith.design/contact/\n"
+"POT-Creation-Date: 2026-08-19T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: WP-CLI i18n\n"
+"X-Domain: better-seo\n"
