@@ -1,0 +1,105 @@
+<?php
+/**
+ * @package Better_SEO\Classes\Meta\Title
+ * @subpackage Better_SEO\Meta\Title
+ */
+
+namespace Better_SEO\Meta\Title;
+
+\defined( 'Better_SEO_PRESENT' ) or die;
+
+use function Better_SEO\{
+	get_query_type_from_args,
+	normalize_generation_args,
+};
+
+use Better_SEO\Data;
+
+
+class Utils {
+
+	
+	public static function get_separator_list() {
+		
+		return (array) \apply_filters(
+			'Better_SEO_separator_list',
+			[
+				'hyphen' => '&#x2d;',
+				'pipe'   => '|',
+				'ndash'  => '&ndash;',
+				'mdash'  => '&mdash;',
+				'bull'   => '&bull;',
+				'middot' => '&middot;',
+				'lsaquo' => '&lsaquo;',
+				'rsaquo' => '&rsaquo;',
+				'frasl'  => '&frasl;',
+				'laquo'  => '&laquo;',
+				'raquo'  => '&raquo;',
+				'le'     => '&le;',
+				'ge'     => '&ge;',
+				'lt'     => '&lt;',
+				'gt'     => '&gt;',
+			],
+		);
+	}
+
+	
+	public static function remove_default_title_filters( $reset = false, $args = null ) {
+
+		static $filtered = [];
+
+		if ( $reset ) {
+			foreach ( $filtered as [ $filter, $function, $priority ] )
+				\add_filter( $filter, $function, $priority );
+
+			// Reset filters.
+			$filtered = [];
+		} else {
+			if ( isset( $args ) ) {
+				normalize_generation_args( $args );
+
+				switch ( get_query_type_from_args( $args ) ) {
+					case 'single':
+						$filters = [ 'single_post_title' ];
+						break;
+					case 'term':
+						switch ( $args['tax'] ) {
+							case 'category':
+								$filters = [ 'single_cat_title' ];
+								break;
+							case 'post_tag':
+								$filters = [ 'single_tag_title' ];
+						}
+				}
+			} else {
+				$filters = [ 'single_post_title', 'single_cat_title', 'single_tag_title' ];
+			}
+
+			
+			$functions = [ 'wptexturize' ];
+
+			if ( ! Data\Plugin::get_option( 'title_strip_tags' ) )
+				$functions[] = 'strip_tags';
+
+			foreach ( ( $filters ?? [] ) as $filter ) {
+				foreach ( $functions as $function ) {
+					
+					$it = 10;
+					$i  = 0;
+					
+					while ( false !== ( $priority = \has_filter( $filter, $function ) ) ) {
+						$filtered[] = [ $filter, $function, $priority ];
+						\remove_filter( $filter, $function, $priority );
+						
+						if ( ++$i > $it ) break 1;
+					}
+				}
+			}
+		}
+	}
+
+	
+	public static function reset_default_title_filters() {
+		self::remove_default_title_filters( true );
+	}
+}
