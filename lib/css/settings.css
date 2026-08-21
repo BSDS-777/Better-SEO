@@ -1,0 +1,286 @@
+/**
+ * Better SEO - Settings Page Styles
+ *
+ * Styles for the Better SEO global settings page, including the metabox layout,
+ * top/bottom button bars, title separator picker, nav tabs, and post type archive
+ * selector.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── SETTINGS PAGE WRAPPER ─────────────────────────────────── */
+.better-seo-metaboxes {
+	box-sizing: border-box;
+	max-width: 740px;
+	padding-bottom: 20px;
+}
+
+/* ─── TOP & BOTTOM BUTTON BARS ──────────────────────────────── */
+.better-seo-top-wrap {
+	margin-bottom: 8px;
+}
+
+.better-seo-top-wrap,
+.better-seo-bottom-wrap {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	flex: 1 1 100%;
+	flex-flow: row wrap;
+	gap: 10px;
+}
+
+.better-seo-top-buttons {
+	padding: 9px 0 4px;
+}
+
+.better-seo-top-buttons,
+.better-seo-bottom-buttons {
+	display: flex;
+	flex: 1 1 auto;
+	justify-content: flex-start;
+	flex-flow: row wrap;
+	gap: 10px;
+}
+
+.better-seo-top-buttons.better-seo-end,
+.better-seo-bottom-buttons.better-seo-end {
+	justify-content: flex-end;
+}
+
+.better-seo-metaboxes .better-seo-top-buttons > *,
+.better-seo-metaboxes .better-seo-bottom-buttons > * {
+	text-align: center;
+}
+
+.better-seo-metaboxes .metabox-holder {
+	clear: both;
+}
+
+/* ─── RESPONSIVE — BUTTON BARS ──────────────────────────────── */
+@media screen and ( max-width: 782px ) {
+	.better-seo-top-wrap,
+	.better-seo-bottom-wrap,
+	.better-seo-top-buttons.better-seo-end,
+	.better-seo-bottom-buttons.better-seo-end {
+		justify-content: flex-start;
+	}
+
+	.better-seo-top-buttons,
+	.better-seo-bottom-buttons {
+		width: 100%;
+	}
+}
+
+/* ─── TITLE SEPARATOR PICKER ────────────────────────────────── */
+
+/* Hidden radio inputs — selection state managed via CSS :checked */
+#better-seo-title-separator {
+	display: table;
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+#better-seo-title-separator input {
+	position: absolute;
+	width: 0;
+	height: 0;
+	opacity: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	z-index: -1;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+#better-seo-title-separator label {
+	display: inline-block;
+	width: auto;
+	min-width: 28px;
+	min-height: 28px;
+	margin: 3px;
+	margin-inline-end: 1.5px;
+	margin-inline-start: 1.5px;
+	padding: 0 4px;
+	border: 1px solid #ccc;
+	line-height: 28px;
+	text-align: center;
+	cursor: pointer;
+	box-shadow: -1px -1px 1px #ddd inset; /* Subtle inset shadow — default state */
+	font-size: 16px;
+}
+
+#better-seo-title-separator label:hover {
+	box-shadow: 1px 1px 1px #aaa inset;
+	background-color: #f0f0f0; /* Light grey — hover state */
+}
+
+#better-seo-title-separator input:checked + label {
+	box-shadow: 1px 1px 1px #333 inset;
+	background-color: #e8e8e8; /* Slightly darker grey — selected state */
+}
+
+#better-seo-title-separator input:focus + label:not( .better-seo-no-focus-ring ) {
+	box-shadow: 0px 0px 1px 1px #2271b1 inset; /* WP admin blue — focus ring */
+}
+
+/* ─── TITLE LOCATION SELECTORS ──────────────────────────────── */
+#better-seo-title-location,
+#better-seo-home-title-location {
+	display: block;
+}
+
+#better-seo-title-location label > span,
+#better-seo-home-title-location label > span {
+	display: inline-block;
+	min-width: 60px;
+	vertical-align: baseline;
+}
+
+/* ─── TITLE ADDITIONS VISIBILITY ────────────────────────────── */
+.better-seo-title-additions-js,
+.better-seo-title-additions-example-left code,
+.better-seo-title-additions-example-right code {
+	white-space: pre-wrap;
+}
+
+.better-seo-title-additions-location-hidden,
+.better-seo-title-tax-prefix-hidden {
+	display: none;
+}
+
+/* ─── POST TYPE ARCHIVE SELECTOR ────────────────────────────── */
+#better-seo-post-type-archive-header-wrap {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+	align-items: center;
+	vertical-align: top;
+	gap: 1.625em 4ch;
+}
+
+#better-seo-post-type-archive-select-wrap {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 1em;
+	align-items: center;
+}
+
+#better-seo-post-type-archive-select-wrap label {
+	font-weight: 600;
+}
+
+#better-seo-post-type-archive-header-wrap h4 {
+	margin: 0;
+}
+
+.better-seo-post-type-archive-link {
+	display: inline-block;
+}
+
+.better-seo-post-type-archive-if-excluded p:last-of-type {
+	margin-bottom: 0;
+}
+
+/* ─── SELECT BLOCK SPACING ──────────────────────────────────── */
+.better-seo-select-block > select:last-of-type {
+	margin-bottom: 14px;
+}
+
+/* ─── SETTINGS NAV TABS ─────────────────────────────────────── */
+.better-seo-nav-tab-no-js,
+.better-seo-nav-tab-wrapper {
+	position: relative;
+	clear: both;
+	width: 100%;
+	display: inline-block;
+	border-bottom: 1px solid #ccc;
+	line-height: inherit;
+	padding: 8px 12px 0;
+	margin: -4px -12px;
+}
+
+.better-seo-nav-tab-label {
+	float: inline-start;
+	border: 1px solid #ccc; /* WP admin border */
+	margin-inline-start: .5em;
+	margin-bottom: -1px;
+	padding: 1ch 2ch;
+	font-size: 12px;
+	background: #f5f5f5; /* WP admin light grey — inactive tab */
+	color: #1a1a2e; /* --better-seo-navy — tab text */
+	font-weight: 600;
+	border-radius: 3px 3px 0 0;
+	cursor: pointer;
+}
+
+.better-seo-nav-desktop {
+	margin-inline-start: 7px;
+}
+
+.better-seo-dashicons-tabs {
+	font-size: initial;
+	display: inline;
+	vertical-align: text-bottom;
+}
+
+/* Hidden radio input — tab state managed via CSS :checked */
+input.better-seo-nav-tab-radio {
+	position: absolute;
+	width: 0;
+	height: 0;
+	opacity: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	z-index: -1;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+/* Active tab — white background merges with content area below */
+.better-seo-nav-tab-radio:checked + label,
+.better-seo-nav-tab-active {
+	background-color: inherit;
+	border-bottom-color: #fff; /* White — active tab merges with content */
+	color: #1a1a2e; /* --better-seo-navy — active tab text */
+}
+
+/* Focus ring — WP admin blue; comment explains why all borders use same color */
+/* All border colors use #2271b1 so the focus ring doesn't appear skewed */
+.better-seo-nav-tab-radio:focus + label:not( .better-seo-no-focus-ring ) {
+	box-shadow:
+		0 0 0 1px #2271b1, /* WP admin blue — outer ring */
+		0 0 2px 1px #2271b1; /* WP admin blue — glow */
+	border-color: #2271b1; /* WP admin blue — border matches ring */
+}
+
+/* ─── NAV TAB CONTENT PANELS ────────────────────────────────── */
+.better-seo-nav-tab-content {
+	margin: 1.33em auto 0;
+}
+
+.better-seo-nav-tab-content select {
+	width: 100%;
+	max-width: max-content;
+	text-overflow: ellipsis;
+}
+
+.better-seo-nav-tab-content-no-js {
+	margin: 1.33em auto;
+}
+
+body.js .better-seo-nav-tab-content {
+	display: none;
+}
+
+body.js .better-seo-nav-tab-content.better-seo-nav-tab-content-active {
+	display: block;
+}

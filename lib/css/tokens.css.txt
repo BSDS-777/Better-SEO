@@ -1,0 +1,190 @@
+/**
+ * Better SEO — Design Token System
+ *
+ * Single source of truth for all CSS custom properties used across
+ * the Better SEO plugin admin interface.
+ *
+ * This file should be enqueued FIRST, before any other Better SEO
+ * CSS file, so all tokens are available to every stylesheet.
+ *
+ * DO NOT add component styles here — tokens only.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ * @see        DESIGN-TOKENS.md for full documentation and migration guide
+ */
+
+:root {
+
+	/* ─── BRAND PALETTE ─────────────────────────────────────────
+	 * Core brand colours for the Better SEO plugin.
+	 * Use these for all Better SEO-specific UI elements.
+	 * Do NOT use these to override WordPress admin colours.
+	 * ─────────────────────────────────────────────────────────── */
+
+	/** Primary dark — headers, tooltip backgrounds, nav tab text */
+	--better-seo-navy:      #1a1a2e;
+
+	/** Hero / CTA backgrounds — deep section backgrounds */
+	--better-seo-deep-blue: #16213e;
+
+	/** Accents, links, informational state, unknown SEO state */
+	--better-seo-mid-blue:  #0f3460;
+
+	/** Primary accent — warnings, loading spinners, focus glow */
+	--better-seo-gold:      #c9a84c;
+
+	/** Light gold — low-contrast okay/warning state */
+	--better-seo-gold-lt:   #e8c97a;
+
+	/** Alt section backgrounds — tooltip text colour */
+	--better-seo-cream:     #faf8f4;
+
+	/** Pure white */
+	--better-seo-white:     #ffffff;
+
+	/** Light grey — subtle backgrounds */
+	--better-seo-grey-lt:   #f4f4f4;
+
+	/** Muted grey — unknown/disabled/undefined states */
+	--better-seo-grey-mid:  #888888;
+
+	/** Dark text — alias of navy for semantic clarity */
+	--better-seo-text-dark: #1a1a2e;
+
+	/** Body paragraph text */
+	--better-seo-text-body: #3d3d3d;
+
+
+	/* ─── STATUS COLOURS — STANDARD CONTRAST ────────────────────
+	 * Used for SEO bar items, counter badges, pixel counter bars,
+	 * AJAX state indicators, and admin notice icons.
+	 *
+	 * Bad    = poor SEO / error / failure
+	 * Okay   = needs attention / warning / loading
+	 * Good   = optimal SEO / success
+	 * Unknown = state cannot be determined
+	 * ─────────────────────────────────────────────────────────── */
+
+	/** 🔴 Bad — poor SEO, errors, failures */
+	--better-seo-status-bad:     #c0392b;
+
+	/** 🟡 Okay — needs attention, warnings (intentionally = gold) */
+	--better-seo-status-okay:    #c9a84c;
+
+	/** 🟢 Good — optimal SEO, success states */
+	--better-seo-status-good:    #27ae60;
+
+	/** ⚫ Unknown — state cannot be determined (intentionally = grey-mid) */
+	--better-seo-status-unknown: #888888;
+
+
+	/* ─── STATUS COLOURS — LOW CONTRAST (Accessibility Mode) ────
+	 * Applied when body.better-seo-seo-bar-low-contrast is present.
+	 * Lighter variants for users who need reduced colour contrast.
+	 * ─────────────────────────────────────────────────────────── */
+
+	/** Light red — bad state, reduced contrast */
+	--better-seo-status-bad-lt:     #e88080;
+
+	/** Light gold — okay state, reduced contrast (intentionally = gold-lt) */
+	--better-seo-status-okay-lt:    #e8c97a;
+
+	/** Light green — good state, reduced contrast */
+	--better-seo-status-good-lt:    #6fcf97;
+
+	/** Muted blue — unknown state, reduced contrast */
+	--better-seo-status-unknown-lt: #5b7fa6;
+
+	/** Light grey — undefined state, reduced contrast */
+	--better-seo-status-undef-lt:   #aaaaaa;
+
+
+	/* ─── SEMANTIC ALIASES ───────────────────────────────────────
+	 * These aliases make intent explicit at the point of use.
+	 * Prefer these over raw palette tokens in component styles
+	 * so the semantic meaning is clear without needing comments.
+	 *
+	 * Example:
+	 *   ✅  color: var(--better-seo-color-error);
+	 *   ⚠️  color: var(--better-seo-status-bad);
+	 *   ❌  color: #c0392b;
+	 * ─────────────────────────────────────────────────────────── */
+
+	/** Error / failure states */
+	--better-seo-color-error:   var(--better-seo-status-bad);
+
+	/** Warning / caution / loading states */
+	--better-seo-color-warning: var(--better-seo-status-okay);
+
+	/** Success / completion states */
+	--better-seo-color-success: var(--better-seo-status-good);
+
+	/** Informational / neutral states */
+	--better-seo-color-info:    var(--better-seo-mid-blue);
+
+	/** Muted / disabled / unknown states */
+	--better-seo-color-muted:   var(--better-seo-grey-mid);
+
+
+	/* ─── TOOLTIP ────────────────────────────────────────────────
+	 * Used in tt.css for the tooltip bubble background and text.
+	 * ─────────────────────────────────────────────────────────── */
+
+	/** Tooltip bubble background */
+	--better-seo-tooltip-bg:    var(--better-seo-navy);
+
+	/** Tooltip bubble text colour */
+	--better-seo-tooltip-color: var(--better-seo-cream);
+
+
+	/* ─── FOCUS RING ─────────────────────────────────────────────
+	 * Used for Better SEO-branded focus indicators.
+	 * Note: WordPress admin focus rings use #2271b1 (WP Blue) —
+	 * these tokens are for Better SEO-specific interactive elements
+	 * such as the dismiss button and custom form controls.
+	 * ─────────────────────────────────────────────────────────── */
+
+	/** Outer focus ring colour — navy border */
+	--better-seo-focus-ring: var(--better-seo-navy);
+
+	/** Inner focus glow colour — gold halo */
+	--better-seo-focus-glow: var(--better-seo-gold);
+
+}
+
+
+/* ─── NOTES FOR DEVELOPERS ───────────────────────────────────────
+ *
+ * WHAT TO USE HERE:
+ *   ✅ CSS custom property declarations only
+ *   ✅ :root scope only
+ *
+ * WHAT NOT TO ADD HERE:
+ *   ❌ Component styles
+ *   ❌ Media queries
+ *   ❌ Selectors other than :root
+ *   ❌ WordPress admin colour overrides
+ *
+ * WORDPRESS ADMIN COLOURS (intentionally NOT tokenized):
+ *   These must match WP core exactly and should remain as hex:
+ *   #2271b1  WP Admin Blue    — focus rings, active states
+ *   #d63638  WP Admin Red     — warning-selected inputs
+ *   #646970  WP Admin Muted   — description text, dismiss button
+ *   #1d2327  WP Admin Dark    — hover states
+ *   #e2e4e7  WP Admin Sep.    — flex setting borders
+ *   #dadada  WP Admin Border  — nav tab borders
+ *   #f5f5f5  WP Admin Light   — nav tab backgrounds
+ *   #f9f9f9  WP Admin Label   — setting label column bg
+ *   #ccc     WP Admin Border  — general borders
+ *
+ * MIGRATION STATUS:
+ *   Phase 1 ✅ — tokens.css created as single source of truth
+ *   Phase 2 ⬜ — enqueue tokens.css before all other CSS files
+ *   Phase 3 ⬜ — replace hex values in component files with var()
+ *   Phase 4 ⬜ — remove :root block from le.css
+ *   See DESIGN-TOKENS.md for the full migration guide.
+ *
+ * ─────────────────────────────────────────────────────────────── */

@@ -1,0 +1,95 @@
+/**
+ * Better SEO - List Edit (LE) Styles
+ *
+ * Styles for the Better SEO quick edit and bulk edit columns
+ * in the WordPress post and term list tables.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── COLOUR PALETTE ───────────────────────────────────────── */
+:root {
+	--better-seo-navy:      #1a1a2e;
+	--better-seo-deep-blue: #16213e;
+	--better-seo-mid-blue:  #0f3460;
+	--better-seo-gold:      #c9a84c;
+	--better-seo-gold-lt:   #e8c97a;
+	--better-seo-cream:     #faf8f4;
+	--better-seo-white:     #ffffff;
+	--better-seo-grey-lt:   #f4f4f4;
+	--better-seo-grey-mid:  #888;
+	--better-seo-text-dark: #1a1a2e;
+	--better-seo-text-body: #3d3d3d;
+}
+
+/* ─── QUICK / BULK EDIT COLUMN WRAPPER ─────────────────────── */
+.better-seo-quick-edit-columns {
+	width: 100%;
+	display: block;
+	clear: both;
+}
+
+.inline-edit-row .better-seo-quick-edit-columns fieldset label span.title {
+	width: 8em;
+}
+
+/* ─── INLINE INPUT ──────────────────────────────────────────── */
+.better-seo-inline-input {
+	display: block;
+	margin-inline-start: 8em;
+}
+
+.better-seo-le-wide-complex-column input,
+.better-seo-le-wide-complex-column textarea,
+.better-seo-inline-input input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* ─── WIDE COMPLEX COLUMN ───────────────────────────────────── */
+.better-seo-le-wide-complex-column {
+	display: block;
+	width: 100%;
+	margin-bottom: 1em;
+	box-sizing: border-box;
+}
+
+.inline-edit-row .better-seo-quick-edit-columns fieldset .better-seo-le-wide-complex-column label span.title {
+	font-weight: 600;
+	float: none;
+	width: 100%;
+	line-height: normal;
+}
+
+/* ─── PADDED INPUT ──────────────────────────────────────────── */
+.better-seo-pad-input input,
+.better-seo-pad-input textarea {
+	margin-top: 1em;
+	margin-right: 0;
+	margin-left: 0;
+	box-sizing: border-box;
+}
+
+/* ─── COLUMN WIDTHS ─────────────────────────────────────────── */
+#wpbody-content .inline-edit-row .better-seo-inline-edit-col-wide {
+	width: 40%;
+}
+
+#wpbody-content .inline-edit-row .better-seo-inline-edit-col-normal {
+	width: 30%;
+}
+
+/* ─── RESPONSIVE ────────────────────────────────────────────── */
+@media screen and ( max-width: 782px ) {
+	.better-seo-inline-input {
+		margin-inline-start: 0;
+	}
+
+	#wpbody-content .inline-edit-row .better-seo-inline-edit-col-wide,
+	#wpbody-content .inline-edit-row .better-seo-inline-edit-col-normal {
+		width: 100%;
+	}
+}

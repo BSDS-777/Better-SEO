@@ -1,0 +1,259 @@
+/**
+ * Better SEO - Post Edit Styles
+ *
+ * Styles for the Better SEO inpost meta box, flex tab navigation,
+ * tab content panels, and block editor (Gutenberg) sidebar integration.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── INPOST META BOX ───────────────────────────────────────── */
+#better-seo-inpost-box .inside {
+	margin: 0;
+	padding: 14px;
+}
+
+#better-seo-inpost-box:not( .better-seo-is-block-editor ) .inside,
+#edit-post\:document #better-seo-inpost-box .inside { /* edit-post\:document is Gutenberg's document sidebar */
+	width: 100%;
+	padding: 0;
+}
+
+#better-seo-inpost-box.closed .inside {
+	display: none;
+}
+
+#better-seo-inpost-box .hndle {
+	justify-content: unset;
+	white-space: pre-wrap;
+}
+
+#better-seo-inpost-box .hndle .better-seo-tooltip-wrap a {
+	font-size: 14px;
+	line-height: 1em;
+}
+
+#better-seo-inpost-box .inside select {
+	width: 100%;
+	max-width: 99%;
+	text-overflow: ellipsis;
+}
+
+/* ─── FLEX INSIDE WRAP ──────────────────────────────────────── */
+.better-seo-flex-inside-wrap {
+	flex-direction: row;
+	width: 100%;
+}
+
+.better-seo-is-block-editor .better-seo-flex-inside-wrap {
+	border: 1px solid #ddd; /* WP admin border */
+}
+
+#edit-post\:document .better-seo-is-block-editor .better-seo-flex-inside-wrap {
+	border: 0;
+}
+
+/* ─── FLEX SETTING ROWS ─────────────────────────────────────── */
+.better-seo-flex-setting {
+	width: 100%;
+	flex-direction: row;
+	border-bottom: 1px solid #e2e4e7; /* WP admin separator */
+}
+
+.better-seo-flex-setting:last-of-type {
+	border-bottom: 0;
+}
+
+/* Sub-flex-setting boxes (nested settings within an input column) */
+.better-seo-flex-setting-input .better-seo-flex-setting {
+	border-left: 1px solid #e2e4e7;
+	border-right: 1px solid #e2e4e7;
+}
+
+.better-seo-flex-setting-input .better-seo-flex-setting:first-of-type {
+	border-top: 1px solid #e2e4e7;
+}
+
+.better-seo-flex-setting-input .better-seo-flex-setting:last-of-type {
+	border-bottom: 1px solid #e2e4e7;
+}
+
+/* ─── FLEX SETTING LABEL & INPUT COLUMNS ───────────────────── */
+.better-seo-flex-setting-label,
+.better-seo-flex-setting-input {
+	background-color: #fff;
+	padding: 15px 12px;
+	flex: 10 1 350px;
+}
+
+.better-seo-flex-setting-label {
+	background-color: #f9f9f9; /* WP admin light grey */
+	flex: 1 1 200px;
+}
+
+.better-seo-flex-setting-input {
+	justify-content: center;
+	flex-wrap: nowrap;
+}
+
+.better-seo-flex-setting-input textarea {
+	max-height: 250px;
+}
+
+.better-seo-flex-setting-label-item {
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	flex-grow: 0;
+}
+
+.better-seo-flex-setting-label-inner-wrap {
+	justify-content: center;
+}
+
+.better-seo-flex-setting-label-item > * {
+	margin-inline-end: 4px;
+}
+
+.better-seo-flex-setting-label-item > *:last-child {
+	margin-inline-end: 0;
+}
+
+.better-seo-flex-setting-label-sub-item {
+	margin-top: 15px;
+}
+
+/* ─── SOCIAL IMAGE BUTTONS ──────────────────────────────────── */
+.better-seo-social-image-buttons {
+	margin-top: 15px;
+	margin-inline-start: 1px;
+}
+
+/* ─── FLEX TAB NAVIGATION ───────────────────────────────────── */
+
+/* Hidden radio input — tab state is managed via CSS :checked selector */
+input.better-seo-flex-nav-tab-radio {
+	position: absolute;
+	width: 0;
+	height: 0;
+	opacity: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	z-index: -1;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+.better-seo-flex-nav-tab-wrapper {
+	background-color: #f5f5f5;
+	border-bottom: 1px solid #dadada;
+	align-items: baseline;
+	flex-flow: row nowrap;
+	max-width: 100%;
+	overflow: hidden;
+	font-weight: 600;
+}
+
+.better-seo-is-block-editor .better-seo-flex-nav-tab-wrapper {
+	background-color: #f3f4f5;
+	border-bottom-color: #e2e4e7;
+}
+
+.better-seo-flex-nav-tab-inner {
+	flex-flow: row nowrap;
+}
+
+.better-seo-flex-nav-tab {
+	flex-direction: row;
+	max-width: max-content;
+}
+
+.better-seo-flex-nav-tab-label {
+	padding: 12px;
+	text-align: center;
+	flex-direction: row;
+	box-shadow: 0 0 0 0 transparent inset;
+	transition: box-shadow .15s ease-out;
+	align-items: center;
+	align-content: space-around;
+	position: relative;
+	cursor: pointer;
+	gap: 4px;
+}
+
+.better-seo-flex-nav-dashicon,
+.better-seo-flex-nav-name {
+	align-items: center;
+	justify-content: center;
+	margin: 0 2px;
+}
+
+/* Active tab — underline indicator using WP admin blue */
+.better-seo-flex-nav-tab .better-seo-flex-nav-tab-radio:checked + .better-seo-flex-nav-tab-label {
+	box-shadow: 0 -2px 0 0 #2271b1 inset, 0 0 0 0 #2271b1 inset; /* WP admin blue */
+	transition: box-shadow .25s ease-in;
+}
+
+/* Focus ring — WP admin blue, suppressed when .better-seo-no-focus-ring is present */
+.better-seo-flex-nav-tab .better-seo-flex-nav-tab-radio:focus + .better-seo-flex-nav-tab-label:not( .better-seo-no-focus-ring ) {
+	box-shadow: 0 0 0 0 #2271b1 inset, 0 0 0 1px #2271b1 inset; /* WP admin blue */
+}
+
+/* ─── FLEX TAB CONTENT PANELS ───────────────────────────────── */
+.better-seo-flex-tab-content {
+	flex: 1 0 100%;
+	max-width: 100%; /* Prevents overflow in some flex containers */
+	flex-wrap: nowrap;
+}
+
+body.js .better-seo-flex-tab-content {
+	display: none;
+}
+
+body.js .better-seo-flex-tab-content.better-seo-flex-tab-content-active {
+	display: flex;
+}
+
+/* ─── NO-JS FALLBACK TAB STYLES ─────────────────────────────── */
+.better-seo-flex-tabs-content-no-js {
+	background-color: #f3f3f3;
+	border-bottom: 1px solid #dadada;
+	box-shadow: 0 2px 0 0 #dadada inset;
+}
+
+.better-seo-flex-tab-no-js {
+	align-items: baseline;
+	flex-direction: row;
+	flex: 1 1 100%;
+}
+
+.better-seo-flex-tab-no-js .better-seo-flex-nav-tab {
+	padding: 12px;
+	min-width: 125px;
+	box-shadow: 0 -2px 0 0 #2271b1 inset; /* WP admin blue */
+	flex-direction: row;
+	flex: 0 1 auto;
+}
+
+/* ─── BLOCK EDITOR (GUTENBERG) OVERRIDES ────────────────────── */
+
+/* Allow the meta box to overflow its container in the block editor sidebar */
+.edit-post-meta-boxes-main,
+.edit-post-meta-boxes-main .edit-post-meta-boxes-main__liner {
+	overflow: unset;
+	isolation: unset;
+}
+
+.interface-complementary-area .components-panel {
+	position: unset;
+}
+
+/* ─── JS / NO-JS VISIBILITY HELPERS ─────────────────────────── */
+.better-seo-js .better-seo-flex-hide-if-js,
+.better-seo-no-js .better-seo-flex-hide-if-no-js {
+	display: none;
+}

@@ -1,0 +1,129 @@
+/**
+ * Better SEO - UI Component Styles
+ *
+ * Styles for the Better SEO admin notice system, including notice icons,
+ * dismiss button, and fade animations.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── NOTICE WRAPPER ────────────────────────────────────────── */
+.notice.better-seo-notice {
+	position: relative;
+	padding-inline-end: 38px;
+	clear: both;
+}
+
+/* ─── NOTICE ICON (Dashicon pseudo-element) ─────────────────── */
+.better-seo-notice.better-seo-show-icon p:before {
+	content: '';
+	margin-inline-end: 12px;
+	background: 0 0;
+	display: inline-block;
+	font: 400 14px/16px dashicons;
+	speak: none;
+	height: 16px;
+	text-align: center;
+	vertical-align: middle;
+	width: 16px;
+	line-height: 14px;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Error notice — red alert icon (dashicons-warning) */
+.error.better-seo-notice.better-seo-show-icon p:before {
+	color: #c0392b; /* Red — error state */
+	content: "\f534";
+}
+
+/* Warning notice — gold warning icon (dashicons-flag) */
+.notice-warning.better-seo-notice.better-seo-show-icon p:before {
+	color: #c9a84c; /* Gold — warning state */
+	content: "\f227";
+}
+
+/* Info notice — mid blue info icon (dashicons-info) */
+.notice-info.better-seo-notice.better-seo-show-icon p:before {
+	color: #0f3460; /* Mid Blue — informational state */
+	font-size: 16px;
+	content: "\f223";
+}
+
+/* Success/updated notice — green checkmark icon (dashicons-yes-alt) */
+.updated.better-seo-notice.better-seo-show-icon p:before {
+	color: #27ae60; /* Green — success state */
+	font-size: 16px;
+	content: "\f147";
+}
+
+/* ─── DISMISS BUTTON ────────────────────────────────────────── */
+/* Specific selector needed — common.css overrides via `.updated a` */
+.better-seo-notice .better-seo-dismiss {
+	position: absolute;
+	top: 0;
+	inset-inline-end: 0;
+	border: none;
+	margin: 0;
+	padding: 10px;
+	background: 0 0;
+	color: #646970; /* WP admin muted text */
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.better-seo-dismiss:hover {
+	color: #1d2327; /* WP admin dark text — hover state */
+}
+
+.better-seo-dismiss:focus {
+	outline: none;
+	box-shadow:
+		0 0 0 1px #1a1a2e, /* --better-seo-navy — outer ring */
+		0 0 2px 1px #c9a84c; /* --better-seo-gold — glow */
+}
+
+/* Dismiss X icon (dashicons-no-alt) */
+.better-seo-dismiss:before {
+	background: 0 0;
+	color: currentColor;
+	content: "\f153";
+	display: block;
+	font: normal 16px/20px dashicons;
+	speak: never;
+	height: 20px;
+	text-align: center;
+	width: 20px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── RESPONSIVE ────────────────────────────────────────────── */
+@media screen and ( max-width: 782px ) {
+	/* Increase dismiss button padding on mobile for easier tap target */
+	.notice.better-seo-notice,
+	.wp-core-ui .notice.better-seo-notice {
+		padding-inline-end: 46px;
+	}
+}
+
+/* ─── ANIMATIONS ────────────────────────────────────────────── */
+@keyframes better-seo-fade-in {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes better-seo-fade-out {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}

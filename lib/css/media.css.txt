@@ -1,0 +1,60 @@
+/**
+ * Better SEO - Media Uploader Styles
+ *
+ * Styles for the Better SEO social image uploader buttons,
+ * image preview icons, and media warning/error states.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── IMAGE NOTIFICATION WRAPPER ───────────────────────────── */
+.better-seo-image-notifications {
+	line-height: 1;
+	vertical-align: bottom;
+}
+
+/* ─── IMAGE BUTTONS & ICONS ─────────────────────────────────── */
+.better-seo-set-image-button.button,
+.better-seo-remove-image-button.button,
+.better-seo-image-preview,
+.better-seo-image-warning {
+	margin-inline-end: 8px;
+}
+
+.better-seo-image-preview,
+.better-seo-image-warning {
+	font-size: 22px;
+}
+
+/* ─── DASHICON PSEUDO-ELEMENTS ──────────────────────────────── */
+
+/* Default: image/media icon (dashicons-format-image) */
+:where( .better-seo-image-preview, .better-seo-image-warning ):after {
+	content: "\f128";
+	display: inline-block;
+	line-height: 1;
+	font-family: dashicons;
+	font-style: normal;
+	font-weight: 400;
+	vertical-align: baseline;
+}
+
+/* Warning: alert icon (dashicons-warning) */
+.better-seo-image-warning:after {
+	content: "\f534";
+}
+
+/* ─── MEDIA STATE COLOURS ───────────────────────────────────── */
+
+/* Warning state — gold accent matches the Better SEO brand palette */
+.better-seo-media-warning:after {
+	color: #c9a84c; /* --better-seo-gold */
+}
+
+/* Error state — standard error red for clear visual distinction */
+.better-seo-media-error:after {
+	color: #c0392b;
+}

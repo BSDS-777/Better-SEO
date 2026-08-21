@@ -1,0 +1,357 @@
+/**
+ * Better SEO - Main Admin Styles
+ *
+ * Core admin styles for the Better SEO plugin, including the SEO bar,
+ * flex layout utilities, form fields, AJAX state indicators, counters,
+ * and responsive overrides.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── JS / NO-JS VISIBILITY HELPERS ─────────────────────────── */
+.better-seo-js .hide-if-better-seo-js,
+.better-seo-no-js .hide-if-no-better-seo-js {
+	display: none;
+}
+
+/* ─── TITLE WRAP & OFFSET ───────────────────────────────────── */
+.better-seo-title-wrap {
+	position: relative;
+	display: block;
+	padding: 0;
+	height: auto;
+	width: auto;
+}
+
+.better-seo-title-offset-wrap {
+	overflow: hidden;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+.better-seo-title-offset {
+	visibility: hidden;
+	height: 0;
+	display: inline-block;
+	position: absolute;
+	inset-inline-start: 0;
+	color: transparent;
+	white-space: pre;
+}
+
+.better-seo-title-placeholder-additions,
+.better-seo-title-placeholder-prefix {
+	position: absolute;
+	color: #777;
+	-webkit-user-select: none;
+	user-select: none;
+	box-sizing: content-box;
+	top: 0;
+	inset-inline-start: 0;
+	overflow: hidden;
+	white-space: pre;
+	text-overflow: ellipsis;
+	will-change: left, right;
+}
+
+.better-seo-title-placeholder-additions {
+	display: none;
+}
+
+/* ─── SEO BAR — COLUMN ──────────────────────────────────────── */
+.fixed .column-better-seo-seo-bar-wrap {
+	width: 11%;
+}
+
+.better-seo-seo-bar {
+	display: flow-root;
+	width: 95%;
+	max-width: 190px;
+	padding: 0;
+}
+
+.better-seo-seo-bar-inner-wrap {
+	border-radius: 3px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	flex: 1 1 auto;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+.better-seo-seo-bar-section-wrap {
+	min-width: 2em;
+	flex: 1 1 auto;
+}
+
+.better-seo-seo-bar-item {
+	display: block;
+	color: #fff;
+	font-size: 13px;
+	text-align: center;
+	text-decoration: none;
+	border: 1px solid rgba( 0, 0, 0, .1 );
+	text-shadow: 0 0 3px rgba( 0, 0, 0, .7 );
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.better-seo-seo-bar-item:focus {
+	outline: none;
+	box-shadow: 0 0 0 1px currentColor inset;
+}
+
+body.no-js .better-seo-seo-bar-item {
+	cursor: default;
+}
+
+/* ─── SEO BAR — STATUS COLOURS (Standard Contrast) ─────────── */
+.better-seo-seo-bar-bad {
+	background-color: #c0392b; /* Red — poor SEO */
+}
+.better-seo-seo-bar-okay {
+	background-color: #c9a84c; /* Gold — needs attention */
+}
+.better-seo-seo-bar-good {
+	background-color: #27ae60; /* Green — good SEO */
+}
+.better-seo-seo-bar-unknown {
+	background-color: #0f3460; /* Mid Blue — unknown state */
+}
+.better-seo-seo-bar-undefined {
+	background-color: #888; /* Grey — not applicable */
+}
+
+/* ─── SEO BAR — STATUS COLOURS (Low Contrast / Accessibility) ── */
+body.better-seo-seo-bar-low-contrast .better-seo-seo-bar-bad {
+	background-color: #e88080; /* Lighter red — reduced contrast mode */
+}
+body.better-seo-seo-bar-low-contrast .better-seo-seo-bar-okay {
+	background-color: #e8c97a; /* Light gold — reduced contrast mode */
+}
+body.better-seo-seo-bar-low-contrast .better-seo-seo-bar-good {
+	background-color: #6fcf97; /* Light green — reduced contrast mode */
+}
+body.better-seo-seo-bar-low-contrast .better-seo-seo-bar-unknown {
+	background-color: #5b7fa6; /* Muted blue — reduced contrast mode */
+}
+body.better-seo-seo-bar-low-contrast .better-seo-seo-bar-undefined {
+	background-color: #aaa; /* Light grey — reduced contrast mode */
+}
+
+/* ─── TAXONOMY OVERFLOW FIX ─────────────────────────────────── */
+/* Prevents term list table columns from clipping the SEO bar tooltip */
+#col-container,
+#col-right {
+	overflow: initial;
+}
+
+/* ─── HELP TEXT ─────────────────────────────────────────────── */
+.better-seo-help {
+	font-weight: normal;
+}
+
+/* ─── FLEX UTILITY ──────────────────────────────────────────── */
+.better-seo-flex {
+	box-sizing: border-box;
+	display: flex;
+	flex: 1 1 auto;
+	flex-flow: column wrap;
+	justify-content: flex-start;
+}
+
+/* ─── SELECT INPUT STATES ───────────────────────────────────── */
+
+/* Default-selected and warning-selected inputs show a colour overlay */
+input:is( .better-seo-default-selected, .better-seo-warning-selected ) {
+	position: relative;
+	will-change: opacity;
+	color: #2271b1; /* WP admin blue — default selected state */
+	border-color: currentColor;
+}
+
+input.better-seo-warning-selected {
+	color: #d63638; /* WP admin red — warning selected state */
+}
+
+input:is( .better-seo-default-selected, .better-seo-warning-selected ):after {
+	content: "";
+	position: absolute;
+	top: 1px;
+	left: 1px;
+	width: calc(100% - 2px);
+	height: calc(100% - 2px);
+	border-radius: inherit;
+	background-color: currentColor;
+	mix-blend-mode: color;
+}
+
+input:is( .better-seo-default-selected, .better-seo-warning-selected ):focus {
+	border-color: currentColor;
+	box-shadow: 0 0 0 1px currentColor;
+}
+
+/* ─── DISABLED STATES ───────────────────────────────────────── */
+label.better-seo-disabled {
+	color: #888; /* Muted grey — disabled label */
+}
+label.better-seo-disabled,
+input.better-seo-disabled {
+	cursor: default;
+}
+
+/* ─── FIELDS & DESCRIPTIONS ─────────────────────────────────── */
+.better-seo-fields {
+	font-size: 13px;
+	line-height: 1.5;
+	margin: 1em 0;
+}
+
+.better-seo-fields .better-seo-toblock {
+	display: block;
+	width: 100%;
+	margin-bottom: 4px;
+}
+
+.better-seo-fields p.description {
+	margin: 7px 0 5px;
+	color: #646970; /* WP admin description grey */
+}
+
+/* ─── SPACING UTILITIES ─────────────────────────────────────── */
+.better-seo-option-spacer {
+	margin: 1em 0;
+}
+
+/* ─── SELECT WRAPPERS ───────────────────────────────────────── */
+.better-seo-select-wrap {
+	margin-top: 7px;
+	margin-bottom: 14px;
+}
+.better-seo-select-wrap:last-of-type {
+	margin-bottom: 0;
+}
+
+.better-seo-select-block > select {
+	margin-top: 7px;
+	margin-bottom: 14px;
+	display: block;
+}
+.better-seo-select-block:last-of-type > select {
+	margin-bottom: 0;
+}
+
+/* ─── CHECKBOX WRAPPER ──────────────────────────────────────── */
+.better-seo-checkbox-wrapper {
+	margin-top: 15px;
+}
+
+.better-seo-checkbox-wrapper:first-child {
+	margin-top: 0;
+}
+
+/* ─── METABOX LEGEND ────────────────────────────────────────── */
+.better-seo-metaboxes legend h4 {
+	margin: 2px 0;
+}
+
+.better-seo-metaboxes legend p:last-of-type {
+	margin-bottom: 0;
+}
+
+/* ─── AJAX STATE INDICATOR ──────────────────────────────────── */
+.better-seo-counter-wrap .better-seo-ajax {
+	margin-inline-start: .5ch;
+}
+
+.better-seo-ajax:before {
+	display: inline-block;
+	line-height: 1;
+	font-family: dashicons;
+	font-style: normal;
+	font-weight: 400;
+	font-size: 1.225em;
+	vertical-align: middle;
+	content: "";
+}
+
+/* Loading — spinning dashicon in gold */
+.better-seo-ajax.better-seo-loading:before {
+	content: "\f463"; /* dashicons-update */
+	color: #c9a84c; /* Gold — loading state */
+	animation: better-seo-spin 1.5s linear infinite;
+}
+
+/* Error — red X dashicon */
+.better-seo-ajax.better-seo-error:before {
+	content: "\f158"; /* dashicons-no */
+	color: #c0392b; /* Red — error state */
+}
+
+/* Success — green checkmark dashicon */
+.better-seo-ajax.better-seo-success:before {
+	content: "\f147"; /* dashicons-yes */
+	color: #27ae60; /* Green — success state */
+}
+
+/* Unknown — grey info dashicon */
+.better-seo-ajax.better-seo-unknown:after {
+	content: "\f223"; /* dashicons-info */
+	color: #888; /* Grey — unknown state */
+}
+
+/* ─── PLACEHOLDER TRANSITIONS ───────────────────────────────── */
+:is( .better-seo-metaboxes, #better-seo-inpost-box, .better-seo-term-meta, .better-seo-quick-edit-columns ) :is( input[type=text], input[type=url], textarea )::placeholder {
+	transition: color .165s ease-in, text-shadow .165s ease-in;
+	text-shadow: 0 0 0 #646970; /* WP admin muted text */
+}
+
+:is( .better-seo-metaboxes, #better-seo-inpost-box, .better-seo-term-meta, .better-seo-quick-edit-columns ) :is( input[type=text], input[type=url], textarea ):focus::placeholder {
+	color: transparent;
+	text-shadow: 0 0 1px #646970; /* WP admin muted text */
+}
+
+/* ─── ANIMATIONS ────────────────────────────────────────────── */
+@keyframes better-seo-spin {
+	0% {
+		transform: rotate( 0deg );
+	}
+	100% {
+		transform: rotate( 360deg );
+	}
+}
+
+/* ─── RESPONSIVE ────────────────────────────────────────────── */
+@media screen and ( max-width: 782px ) {
+	.better-seo-metaboxes p.better-seo-fields,
+	.better-seo-inpost-box p.better-seo-fields {
+		line-height: 2.8;
+	}
+
+	#better-seo-title-location label span,
+	#better-seo-home-title-location label span {
+		min-width: 38px;
+	}
+
+	.wp-list-table .is-expanded td.better-seo-seo-bar-wrap:not( .hidden ) {
+		overflow: initial !important;
+	}
+}
+
+@media screen and ( max-width: 642px ) {
+	/* Hide text labels in nav tabs on very small screens — icons remain visible */
+	.better-seo-nav-desktop {
+		display: none;
+	}
+}
+
+/* ─── THIRD-PARTY CONFLICT SUPPRESSION ──────────────────────── */
+/* Hide AIOSEO conflict notice — Better SEO handles its own conflict detection */
+#wpbody .aioseo-conflicting-plugins-notice {
+	display: none;
+}

@@ -1,0 +1,167 @@
+/**
+ * Better SEO - Tooltip Styles
+ *
+ * Styles for the Better SEO tooltip system, including the tooltip wrapper,
+ * text bubble, arrow indicator, and transparent image checkerboard background.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── TOOLTIP WRAPPER ───────────────────────────────────────── */
+.better-seo-tooltip-super-wrap,
+.better-seo-tooltip-wrap {
+	position: relative;
+}
+
+/* When nested inside a super-wrap, the inner wrap uses static positioning */
+.better-seo-tooltip-super-wrap .better-seo-tooltip-wrap {
+	position: static;
+}
+
+/* ─── TOOLTIP TRIGGER ───────────────────────────────────────── */
+.better-seo-tooltip-item {
+	cursor: help;
+}
+
+a.better-seo-tooltip-item {
+	cursor: pointer;
+}
+
+/* ─── TOOLTIP BUBBLE ────────────────────────────────────────── */
+.better-seo-tooltip {
+	position: absolute;
+	padding: 0;
+	margin: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 100000;
+	text-align: left;
+	pointer-events: none;
+	box-sizing: border-box;
+	display: flex;
+	flex: 1 1 auto;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+	direction: ltr;
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	text-size-adjust: none;
+}
+
+/* Downward-pointing tooltip — appears below the trigger */
+.better-seo-tooltip-down {
+	bottom: auto;
+	top: 0;
+}
+
+/* ─── TOOLTIP TEXT WRAP ─────────────────────────────────────── */
+.better-seo-tooltip-text-wrap {
+	padding: 10px 12px;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.625em;
+	border-radius: 3px;
+	background: #1a1a2e; /* --better-seo-navy */
+	color: #faf8f4; /* --better-seo-cream */
+	box-shadow: 0px 0px 2px rgba( 0, 0, 0, .6 );
+	text-shadow: none;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	white-space: pre-line;
+	display: flex;
+	flex: 1 0 auto;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+}
+
+.better-seo-tooltip-text-wrap * {
+	color: #faf8f4; /* --better-seo-cream — ensure all child elements inherit tooltip text colour */
+}
+
+/* ─── TOOLTIP TEXT CONTENT ──────────────────────────────────── */
+.better-seo-tooltip-text span {
+	text-decoration: underline;
+}
+
+/* Force line breaks to render as block elements inside the tooltip */
+.better-seo-tooltip-text br {
+	display: block;
+	width: 100%;
+	content: "\A";
+}
+
+/* Checkerboard background for transparent images inside tooltips */
+.better-seo-tooltip-text img {
+	background: #fff;
+	background-image:
+		linear-gradient( 45deg, #e0e0e0 25%, transparent 25% ),
+		linear-gradient( -45deg, #e0e0e0 25%, transparent 25% ),
+		linear-gradient( 45deg, transparent 75%, #e0e0e0 75% ),
+		linear-gradient( -45deg, transparent 75%, #e0e0e0 75% );
+	background-size: 16px 16px;
+	background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+/* ─── TOOLTIP LIST STYLES ───────────────────────────────────── */
+.better-seo-tooltip-text ol,
+.better-seo-tooltip-text ul {
+	margin-inline-start: 1.25em;
+	color: inherit;
+}
+
+/* ─── TOOLTIP ARROW ─────────────────────────────────────────── */
+.better-seo-tooltip-arrow {
+	position: absolute;
+	bottom: -8px;
+	z-index: 9999999;
+	left: 7px;
+	width: 0;
+	height: 0;
+}
+
+.better-seo-tooltip-down .better-seo-tooltip-arrow {
+	bottom: auto;
+	top: -8px;
+}
+
+/* Arrow shadow layer — slightly larger for depth effect */
+.better-seo-tooltip-arrow:before {
+	content: "";
+	border-left: 9px solid transparent;
+	border-right: 9px solid transparent;
+	border-top: 9px solid rgba( 0, 0, 0, .25 );
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+/* Arrow fill layer — matches tooltip background colour */
+.better-seo-tooltip-arrow:after {
+	content: "";
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 8px solid #1a1a2e; /* --better-seo-navy */
+	position: absolute;
+	bottom: 1px;
+	left: 1px;
+}
+
+/* Downward arrow — shadow layer */
+.better-seo-tooltip-down .better-seo-tooltip-arrow:before {
+	bottom: auto;
+	top: 0;
+	border-top: 0;
+	border-bottom: 9px solid rgba( 0, 0, 0, .25 );
+}
+
+/* Downward arrow — fill layer */
+.better-seo-tooltip-down .better-seo-tooltip-arrow:after {
+	bottom: auto;
+	top: 1px;
+	border-top: 0;
+	border-bottom: 8px solid #1a1a2e; /* --better-seo-navy */
+}

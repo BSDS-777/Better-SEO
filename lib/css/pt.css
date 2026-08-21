@@ -1,0 +1,49 @@
+/**
+ * Better SEO - Primary Term Selector Styles
+ *
+ * Styles for the Better SEO primary term selector dropdown,
+ * used in the classic editor taxonomy meta boxes and Gutenberg sidebar.
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── PRIMARY TERM SELECTOR — GUTENBERG ─────────────────────── */
+.better-seo-pt-gb-selector {
+	margin-top: 8px;
+}
+
+.better-seo-primary-term-selector-wrap :is( label, select ) {
+	display: block;
+}
+
+.better-seo-primary-term-selector-wrap {
+	margin: 6px 0;
+}
+
+.tabs-panel + .better-seo-primary-term-selector-wrap {
+	margin-top: 10px;
+}
+
+.better-seo-primary-term-selector-wrap select {
+	margin: 6px 0;
+	width: 100%;
+}
+
+/* ─── RESPONSIVE — TOUCH / MOBILE ──────────────────────────── */
+@media screen and ( max-width: 782px ) {
+	/* Increase tap target size for radio inputs on touch screens */
+	.better-seo-primary-term-selector input {
+		height: 18px;
+		width: 18px;
+		min-width: 18px;
+	}
+
+	.better-seo-primary-term-selector input:checked:before {
+		width: 8px;
+		height: 8px;
+		margin: 4px;
+	}
+}

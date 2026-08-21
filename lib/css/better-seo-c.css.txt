@@ -1,0 +1,144 @@
+/**
+ * Better SEO - Counter Styles
+ *
+ * Styles for the Better SEO character counter, pixel counter bar,
+ * and counter status colour states (bad, okay, good, unknown).
+ *
+ * @package    Better_SEO
+ * @author     Brian Smith
+ * @copyright  2026 Brian Smith
+ * @license    GPL-2.0-or-later
+ */
+
+/* ─── CHARACTER COUNTER WRAPPER ─────────────────────────────── */
+.better-seo-counter-wrap {
+	margin-top: 15px;
+}
+
+/* ─── CHARACTER COUNTER TEXT ────────────────────────────────── */
+.better-seo-counter {
+	font-weight: 400;
+	color: #646970; /* WP admin muted text — neutral default */
+	cursor: pointer;
+	-webkit-user-select: none;
+	user-select: none;
+	will-change: contents;
+}
+
+/* ─── COUNTER STATUS COLOURS (Text) ────────────────────────── */
+.better-seo-count-bad {
+	color: #c0392b; /* Red — content too short or too long */
+}
+.better-seo-count-okay {
+	color: #c9a84c; /* Gold — content within acceptable range */
+}
+.better-seo-count-good {
+	color: #27ae60; /* Green — content length is optimal */
+}
+.better-seo-count-unknown {
+	color: #888; /* Grey — state cannot be determined */
+}
+
+/* ─── COUNTER BADGE (Pill) ──────────────────────────────────── */
+.better-seo-counter-one {
+	color: #fff;
+	border-radius: 4em;
+	padding: 0 1ch;
+	min-width: 3ch;
+	display: inline-block;
+	text-align: center;
+	vertical-align: baseline;
+}
+
+/* Badge background colours match text status colours */
+.better-seo-counter-one.better-seo-count-bad {
+	background-color: #c0392b; /* Red — bad */
+}
+.better-seo-counter-one.better-seo-count-okay {
+	background-color: #c9a84c; /* Gold — okay */
+}
+.better-seo-counter-one.better-seo-count-good {
+	background-color: #27ae60; /* Green — good */
+}
+.better-seo-counter-one.better-seo-count-unknown {
+	background-color: #888; /* Grey — unknown */
+}
+
+/* ─── PIXEL COUNTER WRAP ────────────────────────────────────── */
+.better-seo-nav-tab-content .better-seo-pixel-counter-wrap {
+	margin-inline-start: 1px;
+	max-width: 99%;
+}
+
+.better-seo-pixel-shadow-wrap {
+	position: relative;
+	overflow: hidden;
+	width: 0;
+	height: 0;
+}
+
+.better-seo-pixel-counter-wrap {
+	border-bottom: 1px solid #e2e4e7; /* WP admin separator */
+	margin-top: 12px;
+}
+
+/* ─── PIXEL COUNTER BAR ─────────────────────────────────────── */
+.better-seo-pixel-counter-bar {
+	padding-top: 7px;
+	display: block;
+	width: 100%;
+}
+
+/* Fluid progress bar — default neutral gold */
+.better-seo-pixel-counter-fluid {
+	display: block;
+	pointer-events: none;
+	height: 3px;
+	width: 0%;
+	max-width: 100%;
+	background: #c9a84c; /* Gold — default/neutral state */
+	box-shadow: 0px 1px 3px 0px rgba( 201, 168, 76, .4 ); /* Gold glow */
+	transition: width .15s cubic-bezier( 0, 0, .75, 1 );
+}
+
+/* ─── PIXEL COUNTER BAR — STATUS COLOURS ────────────────────── */
+.better-seo-pixel-counter-bad .better-seo-pixel-counter-fluid {
+	background-color: #c0392b; /* Red — content too short or too long */
+}
+
+.better-seo-pixel-counter-okay .better-seo-pixel-counter-fluid {
+	background-color: #c9a84c; /* Gold — content within acceptable range */
+}
+
+.better-seo-pixel-counter-good .better-seo-pixel-counter-fluid {
+	background-color: #27ae60; /* Green — content length is optimal */
+}
+
+/* ─── PIXEL COUNTER SHADOW (Hidden measurement element) ─────── */
+.better-seo-description-pixel-counter-shadow,
+.better-seo-title-pixel-counter-shadow {
+	position: absolute;
+	inset-inline-start: 0;
+	top: 0;
+	z-index: -100;
+	overflow: visible;
+	visibility: hidden;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	display: inline;
+	text-decoration: none;
+	white-space: nowrap;
+	word-wrap: normal;
+	zoom: 1;
+	text-overflow: clip;
+	transition: none;
+	font-family: arial, helvetica, sans-serif;
+	font-size: 18px;
+	font-weight: 400;
+}
+
+/* Description shadow uses a smaller font to match search snippet rendering */
+.better-seo-description-pixel-counter-shadow {
+	font-size: 13px;
+}
