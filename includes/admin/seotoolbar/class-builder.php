@@ -33,54 +33,24 @@ use Better_SEO\Data;
 /**
  * Class Better_SEO\Admin\SEOToolbar\Builder
  *
- * Public API for building and rendering SEO Toolbar output.
- * Delegates test execution to post/term-specific builder subclasses,
- * collects results, and renders the toolbar HTML.
+ * Orchestrates SEO toolbar generation by delegating to specialized builders
+ * for posts/pages and terms, collecting test results, and rendering HTML output.
  *
  * @since 1.0.0
  */
-final class Builder {
+class Builder {
 
-	/**
-	 * Test state constants.
-	 *
-	 * @since 1.0.0
-	 */
 	public const STATE_GOOD = 'good';
 	public const STATE_OKAY = 'okay';
-	public const STATE_BAD  = 'bad';
+	public const STATE_BAD = 'bad';
+	public const STATE_UNKNOWN = 'unknown';
+	public const STATE_UNDEFINED = 'undefined';
 
-	/**
-	 * Items collected from all registered tests.
-	 *
-	 * @since 1.0.0
-	 * @var   array<string, array<string, mixed>>
-	 */
+	private static array $query = [];
 	private static array $items = [];
 
-	/**
-	 * The current query being processed.
-	 *
-	 * @since 1.0.0
-	 * @var   array<string, mixed>
-	 */
-	private static array $query = [];
-
-	/**
-	 * Generates SEO Toolbar HTML for a given query (post, term, user, etc).
-	 *
-	 * Routes to the appropriate builder (post/page or term) based on query args.
-	 * Runs all registered tests, fires the better_seo_toolbar hook, and renders
-	 * the toolbar HTML.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array<string, mixed> $query The query args (id, taxonomy, post_type, etc).
-	 * @return string The complete toolbar HTML, or empty string if no ID.
-	 */
 	public static function generate_bar( array $query ): string {
 
-		// Link the input query for action hooks.
 		self::$query = &$query;
 
 		$query += [
@@ -105,7 +75,7 @@ final class Builder {
 
 		\do_action( 'better_seo_prepare_toolbar', self::class, $builder );
 
-		$items = &self::collect_toolbar_items();
+		$items = &self::collect_seo_toolbar_items();
 
 		foreach ( $builder->run_all_tests( $query ) as $key => $data ) {
 			$items[ $key ] = $data;
@@ -113,53 +83,23 @@ final class Builder {
 
 		\do_action( 'better_seo_toolbar', self::class, $builder );
 
-		$bar = self::create_toolbar( self::$items );
+		$bar = self::create_seo_toolbar( self::$items );
 
-		// Clear items and cache to prevent memory leaks between requests.
 		self::$items = [];
 		$builder->clear_query_cache();
 
 		return $bar;
 	}
 
-	/**
-	 * Returns a reference to the current toolbar items array.
-	 *
-	 * Allows external code to append items via reference.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array<string, array<string, mixed>> Reference to the items array.
-	 */
-	public static function &collect_toolbar_items(): array {
+	public static function &collect_seo_toolbar_items(): array {
 		return self::$items;
 	}
 
-	/**
-	 * Registers a single toolbar item by key.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string               $key  The item key.
-	 * @param array<string, mixed> $item The item definition array.
-	 * @return void
-	 */
-	public static function register_toolbar_item( string $key, array $item ): void {
+	public static function register_seo_toolbar_item( string $key, array $item ): void {
 		self::$items[ $key ] = $item;
 	}
 
-	/**
-	 * Returns a reference to a specific toolbar item for editing.
-	 *
-	 * Returns a reference to a void array if the key does not exist,
-	 * preventing accidental creation of new items via reference assignment.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $key The item key to edit.
-	 * @return array<string, mixed> Reference to the item, or a void array if not found.
-	 */
-	public static function &edit_toolbar_item( string $key ): array {
+	public static function &edit_seo_toolbar_item( string $key ): array {
 		static $_void = [];
 
 		if ( isset( self::$items[ $key ] ) ) {
@@ -172,77 +112,51 @@ final class Builder {
 		return $_item;
 	}
 
-	/**
-	 * Builds and returns the full toolbar HTML wrapper from item definitions.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array<string, array<string, mixed>> $items The toolbar item definitions.
-	 * @return string The complete toolbar HTML string.
-	 */
-	private static function create_toolbar( array $items ): string {
+	private static function create_seo_toolbar( array $items ): string {
 
 		$blocks = [];
 
-		foreach ( self::generate_toolbar_blocks( $items ) as $block ) {
+		foreach ( self::generate_seo_toolbar_blocks( $items ) as $block ) {
 			$blocks[] = $block;
 		}
 
-		// Always return the wrapper — may be populated via JS in the future.
 		return \sprintf(
 			'<div class="better-seo-toolbar better-seo-tooltip-super-wrap"><span class="better-seo-toolbar-inner-wrap">%s</span></div>',
 			implode( '', $blocks ),
 		);
 	}
 
-	/**
-	 * Generates toolbar block HTML strings for each item.
-	 *
-	 * Uses a static cache for translated strings and symbol settings
-	 * to avoid repeated lookups across items.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array<string, array<string, mixed>> $items The toolbar item definitions.
-	 * @return \Generator<int, string>
-	 */
-	private static function generate_toolbar_blocks( array $items ): \Generator {
+	private static function generate_seo_toolbar_blocks( array $items ): \Generator {
 
-		static $gettext = null;
-		static $use_symbols = null;
+		static $gettext = [];
 
-		if ( null === $gettext ) {
+		if ( ! $gettext ) {
 			$gettext = [
-				'assessment'  => \esc_html__( 'Assessment', 'better-seo' ),
-				'assessments' => \esc_html__( 'Assessments', 'better-seo' ),
+				'assessment'  => \_x( 'assessment', 'toolbar item count', 'better-seo' ),
+				'assessments' => \_x( 'assessments', 'toolbar item count', 'better-seo' ),
 			];
-			$use_symbols = (bool) Data\Plugin::get_option( 'seo_bar_symbols' );
 		}
 
 		foreach ( $items as $item ) {
 
-			$status = $item['status'] ?? self::STATE_BAD;
-			$symbol = $item['symbol'] ?? '?';
-			$title  = $item['title'] ?? '';
-			$reason = $item['reason'] ?? '';
-
-			$assessments = [];
-			if ( isset( $item['assess'] ) && \is_array( $item['assess'] ) ) {
-				$assessments = array_values( $item['assess'] );
+			if ( empty( $item['title'] ) || empty( $item['status'] ) ) {
+				continue;
 			}
 
-			$count = \count( $assessments );
-			$html  = $reason ? \sprintf( '%s<br/>', \esc_html( $reason ) ) : '';
-			$html .= $count ? \sprintf(
-				'<strong>%s</strong><br/>%s',
-				\esc_html( $gettext[ $count < 2 ? 'assessment' : 'assessments' ] ),
-				\esc_html( \implode( '<br/>', $assessments ) ),
-			) : '';
-
-			$aria = \sprintf(
-				'%s — %s',
-				\esc_attr( $title ),
+			$status       = $item['status'] ?? '';
+			$symbol       = $item['symbol'] ?? \_x( 'X', 'toolbar item symbol', 'better-seo' );
+			$assessments  = array_values( array_filter( $item['assess'] ?? [] ) ) ?: [ $item['reason'] ?? '' ];
+			$count        = \count( $assessments );
+			$aria         = \sprintf(
+				'%s — %s %s',
+				$item['title'],
+				$count,
 				$count < 2 ? $gettext['assessment'] : $gettext['assessments'],
+			);
+			$html         = \sprintf(
+				'<strong>%s</strong><div>%s</div>',
+				\esc_html( $item['title'] ),
+				\implode( '<div>', array_map( '\\esc_html', $assessments ) ) . \str_repeat( '</div>', $count ),
 			);
 
 			if ( $use_symbols ) {
