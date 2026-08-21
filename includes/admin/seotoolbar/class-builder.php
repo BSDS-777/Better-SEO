@@ -1,9 +1,9 @@
 <?php
 /**
- * Better SEO - Admin SEO Bar Builder
+ * Better SEO - Admin SEO Toolbar Builder
  *
  * @package    Better_SEO
- * @subpackage Better_SEO\Admin\SEOBar
+ * @subpackage Better_SEO\Admin\SEOToolbar
  * @author     Brian Smith
  * @copyright  2026 Brian Smith
  * @license    GPL-2.0-or-later
@@ -24,64 +24,34 @@
 
 declare( strict_types=1 );
 
-namespace Better_SEO\Admin\SEOBar;
+namespace Better_SEO\Admin\SEOToolbar;
 
-\defined( 'BETTER_SEO_PRESENT' ) or die;
+\defined( 'BETTER_SEO_PRESENT' ) or exit;
 
 use Better_SEO\Data;
 
 /**
- * Class Better_SEO\Admin\SEOBar\Builder
+ * Class Better_SEO\Admin\SEOToolbar\Builder
  *
- * Interprets Better SEO Bar item data and renders it as an HTML bar element.
- * Supports post, page, and taxonomy term contexts.
+ * Public API for building and rendering SEO Toolbar output.
+ * Delegates test execution to post/term-specific builder subclasses,
+ * collects results, and renders the toolbar HTML.
  *
  * @since 1.0.0
  */
 final class Builder {
 
 	/**
-	 * Status: undefined — no data available to assess.
+	 * Test state constants.
 	 *
 	 * @since 1.0.0
-	 * @var   int
 	 */
-	public const STATE_UNDEFINED = 0xff4500;
+	public const STATE_GOOD = 'good';
+	public const STATE_OKAY = 'okay';
+	public const STATE_BAD  = 'bad';
 
 	/**
-	 * Status: unknown — data exists but cannot be assessed.
-	 *
-	 * @since 1.0.0
-	 * @var   int
-	 */
-	public const STATE_UNKNOWN = 0x8b0000;
-
-	/**
-	 * Status: bad — assessment failed.
-	 *
-	 * @since 1.0.0
-	 * @var   int
-	 */
-	public const STATE_BAD = 0xff0000;
-
-	/**
-	 * Status: okay — assessment passed with warnings.
-	 *
-	 * @since 1.0.0
-	 * @var   int
-	 */
-	public const STATE_OKAY = 0x85bb65;
-
-	/**
-	 * Status: good — assessment passed.
-	 *
-	 * @since 1.0.0
-	 * @var   int
-	 */
-	public const STATE_GOOD = 0x008000;
-
-	/**
-	 * The collected SEO Bar item definitions for the current bar.
+	 * Items collected from all registered tests.
 	 *
 	 * @since 1.0.0
 	 * @var   array<string, array<string, mixed>>
@@ -89,20 +59,24 @@ final class Builder {
 	private static array $items = [];
 
 	/**
-	 * The current SEO Bar query arguments.
+	 * The current query being processed.
 	 *
 	 * @since 1.0.0
 	 * @var   array<string, mixed>
 	 */
-	public static array $query = [];
+	private static array $query = [];
 
 	/**
-	 * Generates and returns the full SEO Bar HTML for the given query.
+	 * Generates SEO Toolbar HTML for a given query (post, term, user, etc).
+	 *
+	 * Routes to the appropriate builder (post/page or term) based on query args.
+	 * Runs all registered tests, fires the better_seo_toolbar hook, and renders
+	 * the toolbar HTML.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, mixed> $query The query arguments (id, tax, taxonomy, pta, post_type).
-	 * @return string The generated SEO Bar HTML, or empty string if no ID is provided.
+	 * @param array<string, mixed> $query The query args (id, taxonomy, post_type, etc).
+	 * @return string The complete toolbar HTML, or empty string if no ID.
 	 */
 	public static function generate_bar( array $query ): string {
 
@@ -129,17 +103,17 @@ final class Builder {
 			? Builder\Term::get_instance()
 			: Builder\Page::get_instance();
 
-		\do_action( 'better_seo_prepare_seo_bar', self::class, $builder );
+		\do_action( 'better_seo_prepare_toolbar', self::class, $builder );
 
-		$items = &self::collect_seo_bar_items();
+		$items = &self::collect_toolbar_items();
 
 		foreach ( $builder->run_all_tests( $query ) as $key => $data ) {
 			$items[ $key ] = $data;
 		}
 
-		\do_action( 'better_seo_seo_bar', self::class, $builder );
+		\do_action( 'better_seo_toolbar', self::class, $builder );
 
-		$bar = self::create_seo_bar( self::$items );
+		$bar = self::create_toolbar( self::$items );
 
 		// Clear items and cache to prevent memory leaks between requests.
 		self::$items = [];
@@ -149,7 +123,7 @@ final class Builder {
 	}
 
 	/**
-	 * Returns a reference to the current SEO Bar items array.
+	 * Returns a reference to the current toolbar items array.
 	 *
 	 * Allows external code to append items via reference.
 	 *
@@ -157,12 +131,12 @@ final class Builder {
 	 *
 	 * @return array<string, array<string, mixed>> Reference to the items array.
 	 */
-	public static function &collect_seo_bar_items(): array {
+	public static function &collect_toolbar_items(): array {
 		return self::$items;
 	}
 
 	/**
-	 * Registers a single SEO Bar item by key.
+	 * Registers a single toolbar item by key.
 	 *
 	 * @since 1.0.0
 	 *
@@ -170,12 +144,12 @@ final class Builder {
 	 * @param array<string, mixed> $item The item definition array.
 	 * @return void
 	 */
-	public static function register_seo_bar_item( string $key, array $item ): void {
+	public static function register_toolbar_item( string $key, array $item ): void {
 		self::$items[ $key ] = $item;
 	}
 
 	/**
-	 * Returns a reference to a specific SEO Bar item for editing.
+	 * Returns a reference to a specific toolbar item for editing.
 	 *
 	 * Returns a reference to a void array if the key does not exist,
 	 * preventing accidental creation of new items via reference assignment.
@@ -185,7 +159,7 @@ final class Builder {
 	 * @param string $key The item key to edit.
 	 * @return array<string, mixed> Reference to the item, or a void array if not found.
 	 */
-	public static function &edit_seo_bar_item( string $key ): array {
+	public static function &edit_toolbar_item( string $key ): array {
 		static $_void = [];
 
 		if ( isset( self::$items[ $key ] ) ) {
@@ -199,118 +173,91 @@ final class Builder {
 	}
 
 	/**
-	 * Builds and returns the full SEO Bar HTML wrapper from item definitions.
+	 * Builds and returns the full toolbar HTML wrapper from item definitions.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, array<string, mixed>> $items The SEO Bar item definitions.
-	 * @return string The complete SEO Bar HTML string.
+	 * @param array<string, array<string, mixed>> $items The toolbar item definitions.
+	 * @return string The complete toolbar HTML string.
 	 */
-	private static function create_seo_bar( array $items ): string {
+	private static function create_toolbar( array $items ): string {
 
 		$blocks = [];
 
-		foreach ( self::generate_seo_bar_blocks( $items ) as $block ) {
+		foreach ( self::generate_toolbar_blocks( $items ) as $block ) {
 			$blocks[] = $block;
 		}
 
 		// Always return the wrapper — may be populated via JS in the future.
 		return \sprintf(
-			'<div class="better-seo-seo-bar better-seo-tooltip-super-wrap"><span class="better-seo-seo-bar-inner-wrap">%s</span></div>',
+			'<div class="better-seo-toolbar better-seo-tooltip-super-wrap"><span class="better-seo-toolbar-inner-wrap">%s</span></div>',
 			implode( '', $blocks ),
 		);
 	}
 
 	/**
-	 * Generates SEO Bar block HTML strings for each item.
+	 * Generates toolbar block HTML strings for each item.
 	 *
 	 * Uses a static cache for translated strings and symbol settings
 	 * to avoid repeated lookups across items.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array<string, array<string, mixed>> $items The SEO Bar item definitions.
-	 * @return \Generator Yields HTML block strings for each item.
+	 * @param array<string, array<string, mixed>> $items The toolbar item definitions.
+	 * @return \Generator<int, string>
 	 */
-	private static function generate_seo_bar_blocks( array $items ): \Generator {
+	private static function generate_toolbar_blocks( array $items ): \Generator {
 
-		static $gettext, $use_symbols;
+		static $gettext = null;
+		static $use_symbols = null;
 
-		$gettext ??= [
-			/* translators: 1 = SEO Bar type title, 2 = Status reason, 3 = Assessments */
-			'aria'        => \_x( '%1$s: %2$s %3$s', 'SEO Bar ARIA assessment enumeration', 'better-seo' ),
-			/* translators: 1 = Assessment number, 2 = Assessment explanation */
-			'enum'        => \_x( '%1$d: %2$s', 'assessment enumeration', 'better-seo' ),
-			/* translators: 1 = Assessment(s) label, 2 = A list of assessments */
-			'list'        => \_x( '%1$s: %2$s', 'assessment list', 'better-seo' ),
-			'assessment'  => \__( 'Assessment', 'better-seo' ),
-			'assessments' => \__( 'Assessments', 'better-seo' ),
-		];
-
-		$use_symbols ??= (bool) Data\Plugin::get_option( 'seo_bar_symbols' );
+		if ( null === $gettext ) {
+			$gettext = [
+				'assessment'  => \esc_html__( 'Assessment', 'better-seo' ),
+				'assessments' => \esc_html__( 'Assessments', 'better-seo' ),
+			];
+			$use_symbols = (bool) Data\Plugin::get_option( 'seo_bar_symbols' );
+		}
 
 		foreach ( $items as $item ) {
 
-			$status = match ( $item['status'] ) {
-				self::STATE_GOOD      => 'good',
-				self::STATE_OKAY      => 'okay',
-				self::STATE_BAD       => 'bad',
-				self::STATE_UNKNOWN   => 'unknown',
-				default               => 'undefined',
-			};
+			$status = $item['status'] ?? self::STATE_BAD;
+			$symbol = $item['symbol'] ?? '?';
+			$title  = $item['title'] ?? '';
+			$reason = $item['reason'] ?? '';
 
-			if ( $use_symbols && $item['status'] ^ self::STATE_GOOD ) {
-				$symbol = match ( $item['status'] ) {
-					self::STATE_OKAY    => '!?',
-					self::STATE_BAD     => '!!',
-					self::STATE_UNKNOWN => '??',
-					default             => '--',
-				};
-			} else {
-				$symbol = $item['symbol'];
-			}
-
-			$html = \sprintf(
-				'<strong>%s:</strong> %s<br>%s',
-				\esc_html( $item['title'] ),
-				\esc_html( $item['reason'] ),
-				\sprintf(
-					'<ol>%s</ol>',
-					implode(
-						'',
-						array_map(
-							static fn( string $a ): string => '<li>' . \esc_html( $a ) . '</li>',
-							$item['assess'],
-						),
-					),
-				),
-			);
-
-			$count       = \count( $item['assess'] );
 			$assessments = [];
-
-			if ( $count < 2 ) {
-				$assessments[] = reset( $item['assess'] );
-			} else {
-				$i = 0;
-				foreach ( $item['assess'] as $text ) {
-					$assessments[] = \sprintf( $gettext['enum'], ++$i, $text );
-				}
+			if ( isset( $item['assess'] ) && \is_array( $item['assess'] ) ) {
+				$assessments = array_values( $item['assess'] );
 			}
+
+			$count = \count( $assessments );
+			$html  = $reason ? \sprintf( '%s<br/>', \esc_html( $reason ) ) : '';
+			$html .= $count ? \sprintf(
+				'<strong>%s</strong><br/>%s',
+				\esc_html( $gettext[ $count < 2 ? 'assessment' : 'assessments' ] ),
+				\esc_html( \implode( '<br/>', $assessments ) ),
+			) : '';
 
 			$aria = \sprintf(
-				$gettext['aria'],
-				$item['title'],
-				$item['reason'],
-				\sprintf(
-					$gettext['list'],
-					$count < 2 ? $gettext['assessment'] : $gettext['assessments'],
-					implode( ' ', $assessments ),
-				),
+				'%s — %s',
+				\esc_attr( $title ),
+				$count < 2 ? $gettext['assessment'] : $gettext['assessments'],
 			);
 
+			if ( $use_symbols ) {
+				$aria = \sprintf(
+					'%s — %s: %s',
+					\esc_attr( $title ),
+					\esc_attr( $symbol ),
+					\esc_attr(
+						$count < 2 ? $gettext['assessment'] : $gettext['assessments']
+					),
+			);
+			}
+
 			yield \sprintf(
-				'<span class="better-seo-seo-bar-section-wrap better-seo-tooltip-wrap"><span class="better-seo-seo-bar-item better-seo-tooltip-item better-seo-seo-bar-%1$s" title="%2$s" aria-label="%2$s" data-desc="%3$s" tabindex="0">%4$s</span></span>',
+				'<span class="better-seo-toolbar-section-wrap better-seo-tooltip-wrap"><span class="better-seo-toolbar-item better-seo-tooltip-item better-seo-toolbar-%1$s" title="%2$s" aria-label="%2$s" data-desc="%3$s" tabindex="0">%4$s</span></span>',
 				$status,
 				\esc_attr( $aria ),
 				\esc_attr( $html ),

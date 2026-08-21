@@ -1,9 +1,9 @@
 <?php
 /**
- * Better SEO - Admin SEO Bar List Table
+ * Better SEO - Admin SEO Toolbar List Table
  *
  * @package    Better_SEO
- * @subpackage Better_SEO\Admin\SEOBar
+ * @subpackage Better_SEO\Admin\SEOToolbar
  * @author     Brian Smith
  * @copyright  2026 Brian Smith
  * @license    GPL-2.0-or-later
@@ -24,44 +24,44 @@
 
 declare( strict_types=1 );
 
-namespace Better_SEO\Admin\SEOBar;
+namespace Better_SEO\Admin\SEOToolbar;
 
-\defined( 'BETTER_SEO_PRESENT' ) or die;
+\defined( 'BETTER_SEO_PRESENT' ) or exit;
 
 use Better_SEO\Admin;
 use Override;
 
 /**
- * Class Better_SEO\Admin\SEOBar\ListTable
+ * Class Better_SEO\Admin\SEOToolbar\ListTable
  *
- * Adds and renders the Better SEO Bar column in WordPress post and term list tables.
+ * Adds and renders the Better SEO Toolbar column in WordPress post and term list tables.
  *
  * @since 1.0.0
  */
 final class ListTable extends Admin\Lists\Table {
 
 	/**
-	 * The SEO Bar column name used as the column key in list tables.
+	 * The toolbar column name used as the column key in list tables.
 	 *
 	 * @since 1.0.0
 	 * @var   string
 	 */
-	private string $column_name = 'better-seo-seo-bar-wrap';
+	private string $column_name = 'better-seo-toolbar-wrap';
 
 	/**
-	 * Instantiates the ListTable class to register SEO Bar column hooks.
+	 * Instantiates the ListTable class to register toolbar column hooks.
 	 *
 	 * @since 1.0.0
 	 * @hook  admin_init 10
 	 *
 	 * @return void
 	 */
-	public static function init_seo_bar(): void {
+	public static function init_toolbar(): void {
 		new self();
 	}
 
 	/**
-	 * Adds the Better SEO Bar column to the list table.
+	 * Adds the Better SEO Toolbar column to the list table.
 	 *
 	 * Inserts the SEO column before the first matching key from the order list,
 	 * or appends it to the end if no matching key is found.
@@ -69,7 +69,7 @@ final class ListTable extends Admin\Lists\Table {
 	 * @since 1.0.0
 	 *
 	 * @param array<string, string> $columns Existing list table columns.
-	 * @return array<string, string> Modified columns with SEO Bar column inserted.
+	 * @return array<string, string> Modified columns with toolbar column inserted.
 	 */
 	#[\Override]
 	public function add_column( array $columns ): array {
@@ -86,13 +86,13 @@ final class ListTable extends Admin\Lists\Table {
 		];
 
 		/**
-		 * Filters the column keys used to determine SEO Bar column insertion order.
+		 * Filters the column keys used to determine toolbar column insertion order.
 		 *
 		 * @since 1.0.0
 		 *
 		 * @param array<int, string> $order_keys Column keys to search for, in order of preference.
 		 */
-		$order_keys = (array) \apply_filters( 'better_seo_seo_column_keys_order', $order_keys );
+		$order_keys = (array) \apply_filters( 'better_seo_toolbar_column_keys_order', $order_keys );
 
 		$offset = false;
 
@@ -104,11 +104,11 @@ final class ListTable extends Admin\Lists\Table {
 		}
 
 		if ( false === $offset ) {
-			// No matching key found — append SEO Bar column at the end.
+			// No matching key found — append toolbar column at the end.
 			return array_merge( $columns, $seocolumn );
 		}
 
-		// Insert SEO Bar column before the matched column.
+		// Insert toolbar column before the matched column.
 		$columns_before = $columns;
 
 		return array_merge(
@@ -119,7 +119,7 @@ final class ListTable extends Admin\Lists\Table {
 	}
 
 	/**
-	 * Outputs the Better SEO Bar column content for a given post.
+	 * Outputs the Better SEO Toolbar column content for a given post.
 	 *
 	 * @since 1.0.0
 	 *
@@ -147,14 +147,14 @@ final class ListTable extends Admin\Lists\Table {
 	}
 
 	/**
-	 * Outputs the Better SEO Bar column content for a given taxonomy term.
+	 * Outputs the Better SEO Toolbar column content for a given taxonomy term.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $string      The current column content (empty string by default).
 	 * @param string $column_name The current column name.
 	 * @param int    $term_id     The current term ID.
-	 * @return string The SEO Bar HTML prepended to any existing column content.
+	 * @return string The toolbar HTML prepended to any existing column content.
 	 */
 	#[\Override]
 	public function output_column_contents_for_term( string $string, string $column_name, int $term_id ): string {
