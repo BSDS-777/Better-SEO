@@ -1,0 +1,403 @@
+<?php
+/**
+ * @package BETTER_SEO\Classes\Admin\Settings\Plugin
+ * @subpackage BETTER_SEO\Admin\Settings
+ */
+
+namespace BETTER_SEO\Admin\Settings;
+
+\defined( 'BETTER_SEO_PRESENT' ) or die;
+
+use BETTER_SEO\{
+	Admin,
+	Helper\Post_Type,
+	Helper\Template,
+};
+
+
+final class Plugin {
+
+	/**
+	 * Outputs the SEO Settings page wrap.
+	 *
+	 * @hook toplevel_page_theseoframework-settings 10
+	 * @since 4.0.0
+	 * @since 5.0.0 Moved from `\BETTER_SEO\Load`.
+	 * @since 5.0.1 Removed the registration of metaboxes.
+	 */
+	public static function prepare_settings_wrap() {
+
+		\add_action(
+			Admin\Menu::get_page_hook_name() . '_settings_page_boxes',
+			[ self::class, 'output_columns' ],
+		);
+		\add_action(
+			'BETTER_SEO_setting_notices',
+			[ self::class, 'output_notices' ],
+		);
+
+		self::output_wrap();
+	}
+
+		public static function register_seo_settings_meta_boxes() {
+
+				$general           = (bool) \apply_filters( 'BETTER_SEO_general_metabox', true );
+		$title             = (bool) \apply_filters( 'BETTER_SEO_title_metabox', true );
+		$description       = (bool) \apply_filters( 'BETTER_SEO_description_metabox', true );
+		$robots            = (bool) \apply_filters( 'BETTER_SEO_robots_metabox', true );
+		$home              = (bool) \apply_filters( 'BETTER_SEO_home_metabox', true );
+		$post_type_archive = (bool) \apply_filters( 'BETTER_SEO_post_type_archive_metabox', true );
+		$social            = (bool) \apply_filters( 'BETTER_SEO_social_metabox', true );
+		$schema            = (bool) \apply_filters( 'BETTER_SEO_schema_metabox', true );
+		$webmaster         = (bool) \apply_filters( 'BETTER_SEO_webmaster_metabox', true );
+		$sitemap           = (bool) \apply_filters( 'BETTER_SEO_sitemap_metabox', true );
+		$feed              = (bool) \apply_filters( 'BETTER_SEO_feed_metabox', true );
+
+		$settings_page_hook = Admin\Menu::get_page_hook_name();
+
+		// General Meta Box
+		if ( $general )
+			\add_meta_box(
+				'autodescription-general-settings',
+				\esc_html__( 'General Settings', 'autodescription' ),
+				[ self::class, '_general_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Title Meta Box
+		if ( $title )
+			\add_meta_box(
+				'autodescription-title-settings',
+				\esc_html__( 'Title Settings', 'autodescription' ),
+				[ self::class, '_title_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Description Meta Box
+		if ( $description )
+			\add_meta_box(
+				'autodescription-description-settings',
+				\esc_html__( 'Description Meta Settings', 'autodescription' ),
+				[ self::class, '_description_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Social Meta Box
+		if ( $social )
+			\add_meta_box(
+				'autodescription-social-settings',
+				\esc_html__( 'Social Meta Settings', 'autodescription' ),
+				[ self::class, '_social_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Homepage Meta Box
+		if ( $home )
+			\add_meta_box(
+				'autodescription-homepage-settings',
+				\esc_html__( 'Homepage Settings', 'autodescription' ),
+				[ self::class, '_homepage_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		if ( $post_type_archive && Post_Type::get_public_pta() )
+			\add_meta_box(
+				'autodescription-post-type-archive-settings',
+				\esc_html__( 'Post Type Archive Settings', 'autodescription' ),
+				[ self::class, '_post_type_archive_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Schema Meta Box
+		if ( $schema )
+			\add_meta_box(
+				'autodescription-schema-settings',
+				\esc_html__( 'Schema.org Settings', 'autodescription' ),
+				[ self::class, '_schema_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Robots Meta Box
+		if ( $robots )
+			\add_meta_box(
+				'autodescription-robots-settings',
+				\esc_html__( 'Robots Settings', 'autodescription' ),
+				[ self::class, '_robots_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Webmaster Meta Box
+		if ( $webmaster )
+			\add_meta_box(
+				'autodescription-webmaster-settings',
+				\esc_html__( 'Webmaster Meta Settings', 'autodescription' ),
+				[ self::class, '_webmaster_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Sitemaps Meta Box
+		if ( $sitemap )
+			\add_meta_box(
+				'autodescription-sitemap-settings',
+				\esc_html__( 'Sitemap Settings', 'autodescription' ),
+				[ self::class, '_sitemaps_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+
+		// Feed Meta Box
+		if ( $feed )
+			\add_meta_box(
+				'autodescription-feed-settings',
+				\esc_html__( 'Feed Settings', 'autodescription' ),
+				[ self::class, '_feed_metabox' ],
+				$settings_page_hook,
+				'main',
+			);
+	}
+
+	/**
+	 * Outputs SEO Settings page wrap.
+	 *
+	 */
+	public static function output_wrap() {
+		/**
+		 * @since 3.0.0
+		 */
+		\do_action( 'BETTER_SEO_pre_seo_settings' );
+		Template::output_view( 'settings/wrap' );
+		/**
+		 * @since 3.0.0
+		 */
+		\do_action( 'BETTER_SEO_pro_seo_settings' );
+	}
+
+		public static function output_columns() {
+		Template::output_view( 'settings/columns' );
+	}
+
+		public static function output_notices() {
+		Template::output_view( 'settings/notice' );
+	}
+
+		public static function nav_tab_wrapper( $id, $tabs = [] ) {
+		Template::output_view( 'settings/wrap-nav', $id, $tabs );
+		Template::output_view( 'settings/wrap-content', $id, $tabs );
+	}
+
+		public static function _general_metabox() {
+		/**
+		 * @since 2.8.0
+		 */
+		\do_action( 'BETTER_SEO_general_metabox_before' );
+		Template::output_view( 'settings/metaboxes/general', 'main' );
+		/**
+		 * @since 2.8.0
+		 */
+		\do_action( 'BETTER_SEO_general_metabox_after' );
+	}
+
+		public static function _general_metabox_general_tab() {
+		Template::output_view( 'settings/metaboxes/general', 'general' );
+	}
+
+		public static function _general_metabox_layout_tab() {
+		Template::output_view( 'settings/metaboxes/general', 'layout' );
+	}
+
+		public static function _general_metabox_performance_tab() {
+		Template::output_view( 'settings/metaboxes/general', 'performance' );
+	}
+
+		public static function _general_metabox_canonical_tab() {
+		Template::output_view( 'settings/metaboxes/general', 'canonical' );
+	}
+
+		public static function _general_metabox_timestamps_tab() {
+		Template::output_view( 'settings/metaboxes/general', 'timestamps' );
+	}
+
+		public static function _general_metabox_exclusions_tab() {
+		Template::output_view( 'settings/metaboxes/general', 'exclusions' );
+	}
+
+		public static function _title_metabox() {
+		/**
+		 * @since 2.5.0 or earlier.
+		 */
+		\do_action( 'BETTER_SEO_title_metabox_before' );
+		Template::output_view( 'settings/metaboxes/title', 'main' );
+		/**
+		 * @since 2.5.0 or earlier.
+		 */
+		\do_action( 'BETTER_SEO_title_metabox_after' );
+	}
+
+		public static function _title_metabox_general_tab() {
+		Template::output_view( 'settings/metaboxes/title', 'general' );
+	}
+
+		public static function _title_metabox_additions_tab( $args ) {
+		Template::output_view( 'settings/metaboxes/title', 'additions', $args );
+	}
+
+		public static function _title_metabox_prefixes_tab() {
+		Template::output_view( 'settings/metaboxes/title', 'prefixes' );
+	}
+
+		public static function _description_metabox() {
+				\do_action( 'BETTER_SEO_description_metabox_before' );
+		Template::output_view( 'settings/metaboxes/description', 'main' );
+				\do_action( 'BETTER_SEO_description_metabox_after' );
+	}
+
+		public static function _robots_metabox() {
+				\do_action( 'BETTER_SEO_robots_metabox_before' );
+		Template::output_view( 'settings/metaboxes/robots', 'main' );
+				\do_action( 'BETTER_SEO_robots_metabox_after' );
+	}
+
+		public static function _robots_metabox_general_tab() {
+		Template::output_view( 'settings/metaboxes/robots', 'general' );
+	}
+
+		public static function _robots_metabox_no_tab( $args ) {
+		Template::output_view( 'settings/metaboxes/robots', 'no', $args );
+	}
+
+		public static function _robots_metabox_robotstxt_tab() {
+		Template::output_view( 'settings/metaboxes/robots', 'robotstxt' );
+	}
+
+		public static function _homepage_metabox() {
+		
+		\do_action( 'BETTER_SEO_homepage_metabox_before' );
+		Template::output_view( 'settings/metaboxes/homepage', 'main' );
+				\do_action( 'BETTER_SEO_homepage_metabox_after' );
+	}
+
+		public static function _homepage_metabox_general_tab() {
+		Template::output_view( 'settings/metaboxes/homepage', 'general' );
+	}
+
+		public static function _homepage_metabox_additions_tab() {
+		Template::output_view( 'settings/metaboxes/homepage', 'additions' );
+	}
+
+		public static function _homepage_metabox_visibility_tab() {
+		Template::output_view( 'settings/metaboxes/homepage', 'visibility' );
+	}
+
+		public static function _homepage_metabox_social_tab() {
+		Template::output_view( 'settings/metaboxes/homepage', 'social' );
+	}
+
+		public static function _post_type_archive_metabox() {
+				\do_action( 'BETTER_SEO_post_type_archive_before' );
+		Template::output_view( 'settings/metaboxes/post-type-archive', 'main' );
+		
+		\do_action( 'BETTER_SEO_post_type_archive_after' );
+	}
+
+		public static function _post_type_archive_metabox_general_tab( $args ) {
+		Template::output_view( 'settings/metaboxes/post-type-archive', 'general', $args );
+	}
+
+		public static function _post_type_archive_metabox_social_tab( $args ) {
+		Template::output_view( 'settings/metaboxes/post-type-archive', 'social', $args );
+	}
+
+		public static function _post_type_archive_metabox_visibility_tab( $args ) {
+		Template::output_view( 'settings/metaboxes/post-type-archive', 'visibility', $args );
+	}
+
+		public static function _social_metabox() {
+				\do_action( 'BETTER_SEO_social_metabox_before' );
+		Template::output_view( 'settings/metaboxes/social', 'main' );
+		
+		\do_action( 'BETTER_SEO_social_metabox_after' );
+	}
+
+		public static function _social_metabox_general_tab() {
+		Template::output_view( 'settings/metaboxes/social', 'general' );
+	}
+
+		public static function _social_metabox_facebook_tab() {
+		Template::output_view( 'settings/metaboxes/social', 'facebook' );
+	}
+
+		public static function _social_metabox_twitter_tab() {
+		Template::output_view( 'settings/metaboxes/social', 'twitter' );
+	}
+
+		public static function _social_metabox_oembed_tab() {
+		Template::output_view( 'settings/metaboxes/social', 'oembed' );
+	}
+
+		public static function _social_metabox_postdates_tab() {
+		Template::output_view( 'settings/metaboxes/social', 'postdates' );
+	}
+
+		public static function _webmaster_metabox() {
+		
+		\do_action( 'BETTER_SEO_webmaster_metabox_before' );
+		Template::output_view( 'settings/metaboxes/webmaster', 'main' );
+				\do_action( 'BETTER_SEO_webmaster_metabox_after' );
+	}
+
+		public static function _sitemaps_metabox() {
+			\do_action( 'BETTER_SEO_sitemaps_metabox_before' );
+		Template::output_view( 'settings/metaboxes/sitemaps', 'main' );
+		
+		\do_action( 'BETTER_SEO_sitemaps_metabox_after' );
+	}
+
+		public static function _sitemaps_metabox_general_tab() {
+		Template::output_view( 'settings/metaboxes/sitemaps', 'general' );
+	}
+
+		public static function _sitemaps_metabox_robots_tab() {
+		Template::output_view( 'settings/metaboxes/sitemaps', 'robots' );
+	}
+
+		public static function _sitemaps_metabox_metadata_tab() {
+		Template::output_view( 'settings/metaboxes/sitemaps', 'metadata' );
+	}
+
+		public static function _sitemaps_metabox_style_tab() {
+		Template::output_view( 'settings/metaboxes/sitemaps', 'style' );
+	}
+
+		public static function _feed_metabox() {
+				\do_action( 'BETTER_SEO_feed_metabox_before' );
+		Template::output_view( 'settings/metaboxes/feed', 'main' );
+				\do_action( 'BETTER_SEO_feed_metabox_after' );
+	}
+
+		public static function _schema_metabox() {
+				\do_action( 'BETTER_SEO_schema_metabox_before' );
+		Template::output_view( 'settings/metaboxes/schema', 'main' );
+				\do_action( 'BETTER_SEO_schema_metabox_after' );
+	}
+
+		public static function _schema_metabox_general_tab() {
+		Template::output_view( 'settings/metaboxes/schema', 'general' );
+	}
+
+		public static function _schema_metabox_presence_tab() {
+		Template::output_view( 'settings/metaboxes/schema', 'presence' );
+	}
+
+		public static function _schema_metabox_breadcrumbs_tab() {
+		Template::output_view( 'settings/metaboxes/schema', 'breadcrumbs' );
+	}
+}
