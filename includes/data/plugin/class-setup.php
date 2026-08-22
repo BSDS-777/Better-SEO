@@ -26,10 +26,11 @@ declare( strict_types=1 );
 
 namespace Better_SEO\Data\Plugin;
 
-\defined( 'BETTER_SEO_PRESENT' ) or die;
+\defined( 'BETTER_SEO_PRESENT' ) or exit;
 
 use Better_SEO\{
 	Data,
+	Helper,
 	Traits\Property_Refresher,
 };
 
@@ -244,10 +245,10 @@ class Setup {
 				'homepage_redirect'  => '', // Homepage redirect URL.
 
 				// Homepage — Meta.
-				'homepage_title'         => '',       // Homepage Title string.
-				'homepage_tagline'       => 1,        // Homepage add blog Tagline.
-				'homepage_description'   => '',       // Homepage Description string.
-				'homepage_title_tagline' => '',       // Homepage Tagline string.
+				'homepage_title'         => '',        // Homepage Title string.
+				'homepage_tagline'       => 1,         // Homepage add blog Tagline.
+				'homepage_description'   => '',        // Homepage Description string.
+				'homepage_title_tagline' => '',        // Homepage Tagline string.
 				'home_title_location'    => $titleloc, // Title separation location.
 
 				// Homepage — Social.
